@@ -2,7 +2,7 @@
 3D personality plotter tool / 三次元人格プロットツール
 ---
 
-## ⚖️ License & Terms of Use　/　ご利用上の注意点
+## ⚖️ License & Terms of Use / ご利用上の注意点
 
 Copyright (c) 2026 BANeedKSY / 蛮苦恣意
 
