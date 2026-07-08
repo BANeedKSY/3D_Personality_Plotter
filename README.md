@@ -14,6 +14,8 @@ This tool was born from a deeply personal motivation: **the developer's own stru
 - Objective structural analysis of historical figures, literary characters, or political ideologies
 - Academic research and education in psychology, behavioral ecology, and organizational theory
 
+> **Note:** Commercial use such as 💰 marketing is not recommended, and I would prefer that this tool not be used for such purposes.
+
 ---
 
 ## 🚀 How to Use
