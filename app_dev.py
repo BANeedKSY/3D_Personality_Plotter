@@ -2,6 +2,8 @@ import streamlit as st
 import pandas as pd
 import plotly.graph_objects as go
 import math
+from three_d_plot_constants import DEFALUT_DATA_VERSION, STEP_MAX, STEP_MIN, DEFAULT_PERSONAS
+from three_d_plot_constants import GROUPES, AXIS_PREFIX, AXIS_SUFFIX, AXIS_LABELS, AXIS_NAME ,AXIS_DESC ,DATA_LABELS
 
 # "ToDo: マーカーのホバー表示に名前が出ていない。"
 
@@ -20,7 +22,8 @@ import math
 # ==========================================
 st.set_page_config(layout="wide", page_title="3D性格プロッター", page_icon="🌐")
 
-st.title("3D性格プロッター（思考傾向・相性診断システム） 0.07d9")
+st.title("3D性格プロッター（思考傾向・相性診断システム） 0.08d11/Data:" + DEFALUT_DATA_VERSION)
+
 
 val_html = "<div><p>"
 val_html +=  "【目的】人間の思考傾向を「X・Y・Zの3つの次元」で可視化し、ペルソナ間の相性やコミュニケーションエラーを予測するツールです。</br>"
@@ -44,172 +47,9 @@ st.divider()
 SESSION_DELETE_CUSTOM = "custom_personas"  ## 設定されていたら、デフォルト内データ内のサンプルカスタム削除
 
 
-# データ範囲、デフォルトペルソナ・データベースの定義
+# データ範囲、デフォルトペルソナ・データベースの定義 inport
 
-STEP_MAX = 5
-STEP_MIN = -5
-
-
-#GROUPE_LABELS = {
-#    "DEF": "既定値",
-#    "CST": "カスタム", 
-#}
-
-
-GROUPES = {
-    "ANM": "動物",
-    "ENT": "芸能人",
-    "POL": "政治家",
-    "BUS": "経営者",
-    "SCI": "研究者",
-    "AI": "AI",
-    "DEF": "既定値",    # カスタム以外のグループをまとめるための仮のグループ名
-    "CST": "カスタム"
-}
-
-
-DATA_LABELS = {
-    "GRP": "グループ",
-    "NAM": "名前", 
-    "CAT": "カテゴリ",
-    "DSC": "説明",
-}
-
-AXIS_LABELS = {
-    "X": "X軸",
-    "Y": "Y軸", 
-    "Z": "Z軸",
-}
-
-
-
-# df_default 用基礎データ
-default_personas = [
-    #  記述書式  
-    #    グループ:          動物 、芸能人、政治家、経営者、研究者、AIなど  (既定値 / カスタム),          
-    #    名前":            個別名称,            
-    #    カテゴリ":         小区分,（未使用）    
-    #    AXIS_LABELS["X"]: 数値-5.0～5.0,   
-    #    AXIS_LABELS["Y"]: 数値-5.0～5.0,
-    #    AXIS_LABELS["Z"]: 数値-5.0～5.0,
-    #    説明:             個性の概要説明",
-    #
-    # --- 動物グループ ---
-    {
-        DATA_LABELS["GRP"]: GROUPES["ANM"],
-        DATA_LABELS["NAM"]: "女王蜂",
-        DATA_LABELS["CAT"]: "動物（象徴）",
-        AXIS_LABELS["X"]: -5.0,
-        AXIS_LABELS["Y"]: 5.0,
-        AXIS_LABELS["Z"]: 5.0,
-        "説明": "存在そのものがシステムを統合する、究極の象徴（記号）生命体。",
-    },
-    {
-        DATA_LABELS["GRP"]: GROUPES["ANM"],
-        DATA_LABELS["NAM"]: "ボス猿",
-        DATA_LABELS["CAT"]: "動物（極限）",
-        AXIS_LABELS["X"]: -4.0,
-        AXIS_LABELS["Y"]: 5.0,
-        AXIS_LABELS["Z"]: -4.0,
-        "説明": "利権にしがみつき、派閥工作で群れを統治する老ボス。",
-    },
-    {
-        DATA_LABELS["GRP"]: GROUPES["ANM"],
-        "名前": "雄ライオン",
-        "カテゴリ": "動物（極限）",
-        AXIS_LABELS["X"]: 5.0,
-        AXIS_LABELS["Y"]: -4.0,
-        AXIS_LABELS["Z"]: -5.0,
-        "説明": "弱肉強食で圧倒的なパワーにより既存の群れを乗っ取る絶対的捕食者。"
-    },
-    {
-        DATA_LABELS["GRP"]: GROUPES["ANM"],
-        "名前": "一匹狼",
-        "カテゴリ": "動物（極限）",
-        AXIS_LABELS["X"]: 5.0,
-        AXIS_LABELS["Y"]: -5.0,
-        AXIS_LABELS["Z"]: 5.0,
-        "説明": "外部を完全遮断し、独自の掟（美学）のみで荒野を走る孤高の狂信者。",
-    },
-    {
-        DATA_LABELS["GRP"]: GROUPES["ANM"],
-        "名前": "キツネ",
-        "カテゴリ": "動物（日常）",
-        AXIS_LABELS["X"]: 2.0,
-        AXIS_LABELS["Y"]: 3.0,
-        AXIS_LABELS["Z"]: -3.0,
-        "説明": "既存ルールの隙間を突き、要領の良さと知略で立ち回る策士型ハッカー。",
-    },
-    {
-        DATA_LABELS["GRP"]: GROUPES["ANM"],
-        "名前": "飼いネコ",
-        "カテゴリ": "動物（日常）",
-        AXIS_LABELS["X"]: 0.0,
-        AXIS_LABELS["Y"]: -5.0,
-        AXIS_LABELS["Z"]: -5.0,
-        "説明": "他人に興味ゼロ。100%自分のペースと今ここの快適さを極める自由人。",
-    },
-    {
-        DATA_LABELS["GRP"]: GROUPES["ANM"],
-        "名前": "飼いイヌ",
-        "カテゴリ": "動物（日常）",
-        AXIS_LABELS["X"]: -4.0,
-        AXIS_LABELS["Y"]: 5.0,
-        AXIS_LABELS["Z"]: -2.0,
-        "説明": "圧倒的なロイヤリティ（忠誠心）と絆でチームを支える最高のフォロワー。",
-    },
-    {
-        DATA_LABELS["GRP"]: GROUPES["ANM"],
-        "名前": "タヌキ",
-        "カテゴリ": "動物（日常）",
-        AXIS_LABELS["X"]: -2.0,
-        AXIS_LABELS["Y"]: 2.0,
-        AXIS_LABELS["Z"]: -4.0,
-        "説明": "愛嬌とトボけ（狸寝入り）を使い、面倒な仕事や組織の嵐をやり過ごす世渡り上手。",
-    },
-    # --- 芸能人グループ ---
-    {
-        DATA_LABELS["GRP"]: GROUPES["ENT"],
-        DATA_LABELS["NAM"]: "大御所司会者",
-        DATA_LABELS["CAT"]: "タレント",
-        AXIS_LABELS["X"]: 4.0,
-        AXIS_LABELS["Y"]: 3.0,
-        AXIS_LABELS["Z"]: 2.0,
-        DATA_LABELS["DSC"]: "圧倒的な場番回しと権力でスタジオの空気を支配する。",
-    },
-    {
-        DATA_LABELS["GRP"]: GROUPES["ENT"],
-        DATA_LABELS["NAM"]: "ひな壇芸人",
-        DATA_LABELS["CAT"]: "芸人",
-        AXIS_LABELS["X"]: -2.0,
-        AXIS_LABELS["Y"]: -3.0,
-        AXIS_LABELS["Z"]: 4.0,
-        DATA_LABELS["DSC"]: "空気を機敏に察知し、求められた役割を完璧にこなして場を盛り上げる。",
-    },
-    {
-        DATA_LABELS["GRP"]: GROUPES["ENT"],
-        DATA_LABELS["NAM"]: "正統派俳優",
-        DATA_LABELS["CAT"]: "役者",
-        AXIS_LABELS["X"]: 1.0,
-        AXIS_LABELS["Y"]: 2.0,
-        AXIS_LABELS["Z"]: -3.0,
-        DATA_LABELS["DSC"]: "自己の軸を強く持ちながら、作品の世界観にストイックに没入する。",
-    },
-
-#   {
-#        DATA_LABELS["GRP"]: GROUPES["CST"],
-#        DATA_LABELS["NAM"]: "蛮苦恣意",
-#        DATA_LABELS["CAT"]: "変人",
-#        AXIS_LABELS["X"]: 1.0,
-#        AXIS_LABELS["Y"]: -5.0,
-#        AXIS_LABELS["Z"]: -4.0,
-#        DATA_LABELS["DSC"]: "作家や芸術家になれず落書きで暇つぶししている。",
-#    },
-
-]
-## ToDo: データベース拡充（AIなど）
-
-
+default_personas = DEFAULT_PERSONAS
 
 # デフォルトデータフレーム化
 df_default = pd.DataFrame(default_personas)
@@ -229,8 +69,13 @@ def check_conflict(num_x, num_y, num_z):
 
 # 性格色生成関数
 def generate_personality_color(step_min, step_max, num_x, num_y, num_z):  
+    # NaNや欠損値があれば安全なデフォルト値にフォールバック
+    # ToDo: 将来はDF生成時に事前欠落チェック追加
     
-#    # X軸、Y軸、Z軸の値を0〜1の範囲に正規化してRGB値に変換
+    if any(v is None or (isinstance(v, float) and math.isnan(v)) for v in (num_x, num_y, num_z)):
+        return "rgb(128, 128, 128)"  # グレー：座標未定義を示す
+    
+    # X軸、Y軸、Z軸の値を0〜1の範囲に正規化してRGB値に変換
 
     rate_x = (max(STEP_MAX, STEP_MIN) - num_x) / abs(STEP_MAX - STEP_MIN)  # -5 → 1.0, -4 → 0.1, ..., 
     rate_y = (max(STEP_MAX, STEP_MIN) - num_y) / abs(STEP_MAX - STEP_MIN)  # -5 → 1.0, -4 → 0.1, ..., 
@@ -258,6 +103,33 @@ def generate_personality_color(step_min, step_max, num_x, num_y, num_z):
 #    )
     return color
 
+
+# 情緒色生成関数
+def generate_emotionality_color(step_min, step_max, num_a):  
+    # NaNや欠損値があれば安全なデフォルト値にフォールバック
+    # ToDo: 将来はDF生成時に事前欠落チェック追加
+    
+    if num_a is None:
+        return "rgb(128, 128, 128)"  # グレー：座標未定義を示す
+    
+    # a軸の値を0〜1の範囲に正規化してRGB値に変換
+
+    rate_a = (max(STEP_MAX, STEP_MIN) - num_a) / abs(STEP_MAX - STEP_MIN)  # -5 → 1.0, -4 → 0.1, ..., 
+    
+    if rate_a > 1.0: 
+        rate_a = 1.0
+    elif rate_a < 0.0:
+        rate_a = 0.0
+
+    # 緑(0,128,0) ⇔ ピンク(255,128,128)    
+    color = f"rgb({int(255 * (1.0 - rate_a))}, {int(128)}, {int(128 * (1.0 - rate_a))})"
+
+#    )
+    return color
+
+
+
+
 # ==========================================
 # 2. セッション状態（ユーザー定義データ）の管理
 # ==========================================
@@ -282,51 +154,57 @@ if "custom_personas" not in st.session_state:
 st.sidebar.title("🛠️ 設定")
 
 # ② ユーザー定義枠（カスタム追加機能）
-st.sidebar.header("👤 カスタムペルソナ")
-# with st.sidebar.form(key="add_persona_form", clear_on_submit=True):
-with st.sidebar.form(key="add_persona_form", clear_on_submit=False):
+with st.sidebar.expander("👤 カスタムペルソナ定義", expanded=False):
     name = st.text_input(
-        "ペルソナ名 / ターゲット名", placeholder="例：自分、上司A、プロジェクトX"
+        "ペルソナ名 / ターゲット名", placeholder="例：自分、上司A、企画X"
     )
 
-    st.markdown("**X軸：システム（ルールへのスタンス）**")
-    #    x_val = st.slider("[-5:保守・規律・秩序維持 ↔ +5:変革・破壊・ルールメイク]", -5.0, 5.0, 0.0, 1.0, key="slider_x")
+    st.markdown("**" + AXIS_PREFIX + "X" + AXIS_SUFFIX + ":" + AXIS_NAME["X"]  + "**")
     x_val = st.slider(
-        "[-5:保守・秩序維持 ↔ +5:変革・新ルール作り]",
-        float(STEP_MIN),
-        float(STEP_MAX),
-        0.0,
-        1.0,
+        "[" + str(STEP_MIN) + ":" + AXIS_DESC["X"] + ":" + str(STEP_MAX) + "]",
+        int(STEP_MIN),
+        int(STEP_MAX),
+        0,
+        1,
         key="slider_x",
     )
 
-    st.markdown("**Y軸：動機（エネルギーの方向性）**")
+    st.markdown("**" + AXIS_PREFIX + "Y" + AXIS_SUFFIX + ":" + AXIS_NAME["Y"]  + "**")
     y_val = st.slider(
-        "[-5:自己完結・孤高 ↔ +5:外部接続・共感・全体調和]",
-        float(STEP_MIN),
-        float(STEP_MAX),
-        0.0,
-        1.0,
+        "[" + str(STEP_MIN) + ":" + AXIS_DESC["Y"] + ":" + str(STEP_MAX) + "]",
+        int(STEP_MIN),
+        int(STEP_MAX),
+        0,
+        1,
         key="slider_y",
     )
 
-    st.markdown("**Z軸：立脚点（価値基準）**")
-    #    z_val = st.slider("[-5:泥臭い実利・成果 ↔ +5:抽象大義・精神・理念]", -5.0, 5.0, 0.0, 1.0, key="slider_z")
+    st.markdown("**" + AXIS_PREFIX + "Z" + AXIS_SUFFIX + ":" + AXIS_NAME["Z"]  + "**")
     z_val = st.slider(
-        "[-5:物理的現実・生存実利 ↔ +5:概念抽象・思想理念]",
-        float(STEP_MIN),
-        float(STEP_MAX),
-        0.0,
-        1.0,
+        "[" + str(STEP_MIN) + ":" + AXIS_DESC["Z"] + ":" + str(STEP_MAX) + "]",
+        int(STEP_MIN),
+        int(STEP_MAX),
+        0,
+        1,
         key="slider_z",
+    )
+
+    st.markdown("**" + AXIS_PREFIX + "a" + AXIS_SUFFIX + ":" + AXIS_NAME["a"]  + "**")
+    alfa_val = st.slider(
+        "[" + str(STEP_MIN) + ":" + AXIS_DESC["a"] + ":" + str(STEP_MAX) + "]",
+        int(STEP_MIN),
+        int(STEP_MAX),
+        0,
+        1,
+        key="slider_alfa",
     )
 
     desc = st.text_area(
         "説明（特徴や行動特性など）",
-        placeholder="ターゲットの性格やプロトコルに関するメモ",
+        placeholder="ターゲットの性格や行動の特徴に関するメモ",
     )
 
-    submit_button = st.form_submit_button(label="空間へプロット追加")
+    submit_button = st.button(label="空間へプロット追加")
 
 # フォーム送信時の処理
 if submit_button:
@@ -339,6 +217,12 @@ if submit_button:
             AXIS_LABELS["X"]: x_val,
             AXIS_LABELS["Y"]: y_val,
             AXIS_LABELS["Z"]: z_val,
+            AXIS_LABELS["a"]: alfa_val,
+            AXIS_LABELS["A"]: 0,
+            AXIS_LABELS["B"]: 0,
+            AXIS_LABELS["C"]: 0,
+            AXIS_LABELS["D"]: 0,
+            AXIS_LABELS["E"]: 0,
             DATA_LABELS["DSC"]: desc.strip()
                 if desc.strip()
                 else "ユーザーが定義したカスタムペルソナです。",
@@ -394,17 +278,15 @@ selected_names = []
 for idx, row in df_group_filtered.iterrows():
     # 選択されているグループのペルソナだけがここにチェックボックスとして並びます
     if st.sidebar.checkbox(
-        # ToDo: チェックボックスの変数指定変更",
-        row["名前"], value=select_all, key=f"cb_{row['名前']}_{idx}_{row['グループ']}"
-
-        # row[DATA_LABELS["NAM"]], value=select_all, key=f"cb_{row[DATA_LABELS["NAM"]]}_{idx}_{row[DATA_LABELS["GRP"]]}"
+        # row[DATA_LABELS['NAM']], value=select_all, key=f"cb_{row[DATA_LABELS['NAM']]}_{idx}_{row[DATA_LABELS['GRP']]}"
+        row[DATA_LABELS['GRP']] + "-" + row[DATA_LABELS['NAM']], value=select_all, key=f"cb_{row[DATA_LABELS['NAM']]}_{idx}_{row[DATA_LABELS['GRP']]}"
     ):
-        selected_names.append(row["名前"])
+        selected_names.append(row[DATA_LABELS['NAM']])
 
 # 最終的に3Dプロットに渡すデータ（最終抽出）
-df_pre_final = df_group_filtered[df_group_filtered["名前"].isin(selected_names)]
+df_pre_final = df_group_filtered[df_group_filtered[DATA_LABELS['NAM']].isin(selected_names)]
 
-# マーカーにXYZ属性に応じた色をする設定する
+# マーカーにXYZ,a属性に応じた色をする設定する
 df_final = df_pre_final.copy()  # コピーを作成
 if not df_final.empty:
     df_final["color"] = df_final.apply(
@@ -415,8 +297,19 @@ if not df_final.empty:
             row[AXIS_LABELS["Y"]],
             row[AXIS_LABELS["Z"]],
         ),
-        axis=1,
-)
+        axis=1
+    )
+    
+    df_final["color_e"] = df_final.apply(
+        lambda row: generate_emotionality_color(
+            STEP_MIN,
+            STEP_MAX,
+            row[AXIS_LABELS["a"]],
+        ),
+        axis=1
+    )
+    
+    
 ### print("DEBUG colors:", df_final["color"].tolist())
 
 
@@ -460,7 +353,7 @@ plot_col, grade_col = st.columns([5, 1], gap="small")
 # https://plotly.com/python/marker-style/
 
 with plot_col:
-    st.subheader("🌐 3D思考OS空間プロット")
+    st.subheader("🌐 3D性格プロット － 性格・思考傾向分布把握用")
 
     # fig = go.Figure()
 
@@ -521,6 +414,7 @@ with plot_col:
         # 3D散布図のマーカー描画関数
         # ------------------------------------------
         def draw_3d_markers(fig, df_draw, df_draw_type, legend_state=True):
+
             if not df_draw.empty:
                 fig.add_trace(
                     go.Scatter3d(
@@ -529,7 +423,7 @@ with plot_col:
                         z=group_df[AXIS_LABELS["Z"]],
                         mode="text",
                         name=group_name,  # 凡例にグループ名が表示されます
-                        text=group_df["名前"],
+                        text=group_df[DATA_LABELS["NAM"]],
                         hoverinfo="skip",
                         showlegend=False,                   # 凡例非表示 
                     )
@@ -537,11 +431,16 @@ with plot_col:
 
                 # ペルソナのプロット（ぶりつぶし色は属性を反映）
                 if df_draw_type != GROUPES["CST"]:
-                    shadow_color='lightgray'            # 規定ペルソナは背景円示の色を薄い灰色にしてデフォルトペルソナを目立たせない
+                    # shadow_color='lightgray'            # 規定ペルソナは背景円示の色を薄い灰色にしてデフォルトペルソナを目立たせない
+                    shadow_shape = 'circle'
                 else:
-                    shadow_color='rgb(255,160,160)'     # カスタムペルソナは背景円示の色を薄赤にしてカスタムペルソナを強調
+                    # shadow_color='rgb(255,160,160)'     # カスタムペルソナは背景円示の色を薄赤にしてカスタムペルソナを強調
+                    shadow_shape = 'square'
                 
-                # ①　マーカーの背景を描画                 # 枠線を太くして背景円を表示する       
+                # ①　マーカーの背景を描画                 # 枠線を太くして背景円を表示する    
+
+                # DEBUG  print(df_draw.head())
+                
                 fig.add_trace(go.Scatter3d(
 
                     x=df_draw[AXIS_LABELS["X"]],
@@ -549,16 +448,18 @@ with plot_col:
                     z=df_draw[AXIS_LABELS["Z"]],
                     
                     text=group_df[DATA_LABELS["NAM"]],
-                    #mode='markers+text',              # 名前も表示する場合は 'markers+text' に変更
+                    #mode='markers+text',               # 名前も表示する場合は 'markers+text' に変更
                     mode='markers',                     # 名前も表示する場合は 'markers+text' に変更
                     
                     marker=dict(
-                        line=dict(width=0),             # 背景円の枠線幅は０
-                        symbol='circle',
+                        line=dict(width=0),             # 背景の枠線幅は０
+                        symbol=shadow_shape,
                         #symbol='diamond',
                         size=6,
-                        color=shadow_color,             # 背景として目立たない色にする
-                        opacity=0.4                     # 薄く透けさせる
+#                        color=generate_emotionality_color(STEP_MIN, STEP_MAX, f"{AXIS_NAME['Z']}"),
+#                        color=generate_emotionality_color(STEP_MIN, STEP_MAX, df_draw[AXIS_LABELS['a']]),
+                        color=df_draw["color_e"],
+                        opacity=0.7                     # 薄く透けさせる
                     ),
                     hoverinfo='skip',                   # ホバー情報は表示しない
                     name=df_draw_type,
@@ -566,10 +467,12 @@ with plot_col:
                 ))
                 
                 # ② その上にマーカーを所定の外形でクッキリ描画
+
                 fig.add_trace(go.Scatter3d(
                     x=df_draw[AXIS_LABELS["X"]],
                     y=df_draw[AXIS_LABELS["Y"]],
                     z=df_draw[AXIS_LABELS["Z"]],
+                    #a=df_draw[AXIS_LABELS["a"]],
 
                     # mode='markers+text',              # 名前も表示する場合は 'markers+text' に変更
                     # mode='none',                      # 名前、マーカーも表示しない場合は 'none' に変更
@@ -589,45 +492,26 @@ with plot_col:
                         color=df_draw["color"],         # 予め計算しておいた色を設定
                         opacity=1.0
                     ),
-                    # 吹き出し
-                    # ToDo: 吹き出しの書式見直し
-                    # 
-                    #    hovertemplate="<b>%{name}</b><br>カテゴリ: %{customdata[0]}<br>X (システム): %{x}<br>Y (動機): %{y}<br>Z (立脚点): %{z}<br>説明: %{customdata[1]}<extra></extra>",
-                    #    customdata=df_draw[["カテゴリ", "説明"]],
-                    #    name=df_draw_type,
-                    #    #name=df_draw[["カテゴリ"]],
-                    #    showlegend=False,                   # 凡例非表示 
 
-                    #hovertemplate="<b>%{customdata[0]}</b><br>カテゴリ: %{customdata[1]}<br>X (システム): %{x}<br>Y (動機): %{y}<br>Z (立脚点): %{z}<br>説明: %{customdata[2]}<extra></extra>",
-                    #customdata=df_draw[[DATA_LABELS["NAM"], DATA_LABELS["CAT"], DATA_LABELS["DSC"]]],
-                    hovertemplate="<b>%{customdata[0]}</b><br>カテゴリ: %{customdata[1]}<br>X (システム): %{x}<br>Y (動機): %{y}<br>Z (立脚点): %{z}<br>説明: %{customdata[2]}<extra></extra>",
-                    customdata=df_draw[[DATA_LABELS["NAM"], DATA_LABELS["CAT"], DATA_LABELS["DSC"]]],
+                    # 吹き出し
+                    hovertemplate = (
+                        f"<b>%{{customdata[0]}}</b><br>"
+                        f"%{{customdata[1]}} %{{customdata[2]}}<br>"
+                        f"X ({AXIS_NAME['X']}): %{{x}}<br>"
+                        f"Y ({AXIS_NAME['Y']}): %{{y}}<br>"
+                        f"Z ({AXIS_NAME['Z']}): %{{z}}<br>"
+                        f"α ({AXIS_NAME['a']}): %{{customdata[3]}}<br>"
+                        f"{DATA_LABELS['DSC']}: %{{customdata[4]}}<extra></extra>"
+                    ), 
+                    customdata=df_draw[[DATA_LABELS["NAM"], DATA_LABELS["GRP"], DATA_LABELS["CAT"], AXIS_LABELS["a"], DATA_LABELS["DSC"]]],
+
                     name=df_draw_type,
                     showlegend=False,                   # 凡例非表示 
-
-
                 ))
         
         legend_displayed_flag = False  # 凡例表示のフラグ初期値を False に設定
         
         for group_name, group_df in df_final.groupby("グループ"):
-            # 個別マーカーの説明表示
-            
-            if False:
-                fig.add_trace(
-                    
-                    go.Scatter3d(
-                        x=group_df[AXIS_LABELS["X"]],
-                        y=group_df[AXIS_LABELS["Y"]],
-                        z=group_df[AXIS_LABELS["Z"]],
-                        mode="markers+text",
-                        name=group_name,  # 凡例にグループ名が表示されます
-                        text=group_df["名前"],
-                        hoverinfo="text",
-                        #hoverdistance=4,  # ホバー距離を調整（デフォルトは2）
-                        showlegend=False,                   # 凡例は非表示 
-                    )
-                )
 
             # A. デフォルトペルソナ(グループが、カスタム以外)のプロット
             draw_3d_markers(fig, 
@@ -659,17 +543,17 @@ with plot_col:
             margin=dict(l=0, r=0, b=0, t=30),
             scene=dict(
                 xaxis=dict(
-                    title="X: システム (保守 ↔ 変革)",
+                    title=AXIS_LABELS["X"] + ":" + AXIS_NAME["X"] + "(" + AXIS_DESC["X"] + ")",
                     range=[STEP_MIN - 0.5, STEP_MAX + 0.5],
                     gridcolor="rgba(128,128,128,0.2)",
                 ),
                 yaxis=dict(
-                    title="Y: 動機 (自己完結 ↔ 外部接続)",
+                    title=AXIS_LABELS["Y"] + ":" + AXIS_NAME["Y"] + "(" + AXIS_DESC["Y"] + ")",
                     range=[STEP_MIN - 0.5, STEP_MAX + 0.5],
                     gridcolor="rgba(128,128,128,0.2)",
                 ),
                 zaxis=dict(
-                    title="Z: 立脚点 (実利 ↔ 抽象大義)",
+                    title=AXIS_LABELS["Z"] + ":" + AXIS_NAME["Z"] + "(" + AXIS_DESC["Z"] + ")",
                     range=[STEP_MIN - 0.5, STEP_MAX + 0.5],
                     gridcolor="rgba(128,128,128,0.2)",
                 ),
@@ -716,8 +600,8 @@ with grade_col:
     # 上から下へ向かう11段階の数値リスト（+5 から -5）
     steps_reverse = list(range(STEP_MAX, STEP_MIN-1, -1))
     
-    # 💡 4列（数値用、X軸、Y軸、Z軸）に小さく均等分割します
-    c_val, c_x, c_y, c_z = st.columns(4)
+    # 💡 5列（数値用、X軸、Y軸、Z軸、a軸）に小さく均等分割します
+    c_val, c_x, c_y, c_z, c_a = st.columns(5)
 
     # 共通のブロックサイズ設定
     block_style = "width:22px; height:22px; display:flex; align-items:center; justify-content:center; border-radius:3px; font-size:10px; font-weight:bold; font-family:monospace;"
@@ -725,7 +609,7 @@ with grade_col:
     # --- 1列目：数値表示（左端・単色グレー） ---
     with c_val:
         st.markdown(
-            "<div style='text-align: center; font-size: 11px; font-weight: bold; color: #555555;'>値</div>",
+            "<div style='text-align: center; font-size: 11px; font-weight: bold; color: #555555;'>" + DATA_LABELS["VAL"] + "</div>",
             unsafe_allow_html=True,
         )
         val_html = "<div style='display: flex; flex-direction: column; gap: 4px; align-items: center;'>"
@@ -741,7 +625,7 @@ with grade_col:
     # --- 2列目：X軸（シアン） ---
     with c_x:
         st.markdown(
-            "<div style='text-align: center; font-size: 11px; font-weight: bold; color: #008B8B;'>X</div>",
+            "<div style='text-align: center; font-size: 11px; font-weight: bold; color: #008B8B;'>" + AXIS_LABELS["X"] + "</div>",
             unsafe_allow_html=True,
         )
         x_html = "<div style='display: flex; flex-direction: column; gap: 4px; align-items: center;'>"
@@ -754,7 +638,7 @@ with grade_col:
     # --- 3列目：Y軸（マゼンタ） ---
     with c_y:
         st.markdown(
-            "<div style='text-align: center; font-size: 11px; font-weight: bold; color: #8B008B;'>Y</div>",
+            "<div style='text-align: center; font-size: 11px; font-weight: bold; color: #8B008B;'>" + AXIS_LABELS["Y"] + "</div>",
             unsafe_allow_html=True,
         )
         y_html = "<div style='display: flex; flex-direction: column; gap: 4px; align-items: center;'>"
@@ -767,7 +651,7 @@ with grade_col:
     # --- 4列目：Z軸（イエロー） ---
     with c_z:
         st.markdown(
-            "<div style='text-align: center; font-size: 11px; font-weight: bold; color: #8B8B00;'>Z</div>",
+            "<div style='text-align: center; font-size: 11px; font-weight: bold; color: #8B8B00;'>" + AXIS_LABELS["Z"] + "</div>",
             unsafe_allow_html=True,
         )
         z_html = "<div style='display: flex; flex-direction: column; gap: 4px; align-items: center;'>"
@@ -776,6 +660,19 @@ with grade_col:
             z_html += f"<div style='background-color:{color}; border:1px solid #B0BEC5; {block_style}'></div>"
         z_html += "</div>"
         st.markdown(z_html, unsafe_allow_html=True)
+
+    # --- 5列目：a軸（緑⇔ピンク） ---
+    with c_a:
+        st.markdown(
+            "<div style='text-align: center; font-size: 11px; font-weight: bold; color: #8B8B00;'>" + AXIS_LABELS["a"] + "</div>",
+            unsafe_allow_html=True,
+        )
+        a_html = "<div style='display: flex; flex-direction: column; gap: 4px; align-items: center;'>"
+        for v in steps_reverse:
+            color = generate_emotionality_color(STEP_MIN, STEP_MAX, v)  # a軸の値に基づく色を生成
+            a_html += f"<div style='background-color:{color}; border:1px solid #B0BEC5; {block_style}'></div>"
+        a_html += "</div>"
+        st.markdown(a_html, unsafe_allow_html=True)
 
 
 ####################################################################################################################
@@ -893,7 +790,7 @@ else:
         # アコーディオンパネルで綺麗に出力
         # ToDo: グループのアイコン変更？
         icon = "🦊" if row[DATA_LABELS["GRP"]] == GROUPES["CST"] else "👤"
-        with st.expander(f"{icon} {row['名前']}（空間距離: {dist:.2f}）"):
+        with st.expander(f"{icon} {row[DATA_LABELS['NAM']]}（空間距離: {dist:.2f}）"):
             #
             st.write(
             #    f"**システム座標**: X:{row['X軸']} / Y:{row['Y軸']} / Z:{row['Z軸']} ({row['カテゴリ']})"
