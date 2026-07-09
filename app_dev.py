@@ -1,12 +1,12 @@
 import streamlit as st
-import streamlit.components.v1 as components
+#import streamlit.components.v1 as components
 import pandas as pd
 import plotly.graph_objects as go
 import math
 from three_d_plot_constants import DEFALUT_DATA_VERSION, STEP_MAX, STEP_MIN, DEFAULT_PERSONAS
 from three_d_plot_constants import GROUPES, AXIS_PREFIX, AXIS_SUFFIX, AXIS_LABELS, AXIS_NAME ,AXIS_DESC ,DATA_LABELS
 
-# "ToDo: マーカーのホバー表示に名前が出ていない。"
+# "ToDo: "
 
 ####################################################################################################################
 # ┏━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
@@ -34,26 +34,26 @@ st.title("3D性格プロッター（思考傾向・相性診断システム） 0
 #""", unsafe_allow_html=True)
 
 # 💡【翻訳ポップアップ防止ハック】 ### 結果的には無意味?
-components.html(
-    """
-    <script>
-        try {
-            // 1. 親ドキュメントのlang属性をjaに変更（念のため）
-            window.parent.document.documentElement.lang = 'ja';
-            
-            // 2. Google翻訳を強制的に無効化するメタタグを作成してheadに追加
-            var meta = window.parent.document.createElement('meta');
-            meta.name = 'google';
-            meta.content = 'notranslate';
-            window.parent.document.getElementsByTagName('head')[0].appendChild(meta);
-        } catch (e) {
-            console.log("iframeのセキュリティ制限によりブロックされました");
-        }
-    </script>
-    """,
-    width=0,
-    height=0
-)
+#    components.html(
+#        """
+#        <script>
+#            try {
+#                // 1. 親ドキュメントのlang属性をjaに変更（念のため）
+#                window.parent.document.documentElement.lang = 'ja';
+#                
+#                // 2. Google翻訳を強制的に無効化するメタタグを作成してheadに追加
+#                var meta = window.parent.document.createElement('meta');
+#                meta.name = 'google';
+#                meta.content = 'notranslate';
+#                window.parent.document.getElementsByTagName('head')[0].appendChild(meta);
+#            } catch (e) {
+#                console.log("iframeのセキュリティ制限によりブロックされました");
+#            }
+#        </script>
+#        """,
+#        width=0,
+#        height=0
+#    )
 
 val_html = "<div><p>"
 val_html +=  "【目的】人間の思考傾向を「X・Y・Zの3つの次元」で可視化し、ペルソナ間の相性やコミュニケーションエラーを予測するツールです。</br>"
