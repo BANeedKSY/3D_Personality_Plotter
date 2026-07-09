@@ -1,7 +1,7 @@
 # 3D性格分析ツール用定数データファイル
 
 
-DEFALUT_DATA_VERSION = "0.05"
+DEFALUT_DATA_VERSION = "0.06"
 
 # データ範囲、デフォルトペルソナ・データベースの定義
 
@@ -18,7 +18,6 @@ GROUPES = {
     "DEF": "既定値",    # カスタム以外のグループをまとめるための仮のグループ名
     "CST": "カスタム"
 }
-
 
 DATA_LABELS = {
     "GRP": "グループ",
@@ -67,7 +66,6 @@ AXIS_DESC = {
     "E": "過去を引きづる⇔気にしない",
 }
 
-
 ####     Copilot,   Grok,  Gemini,  Claude
 
 # df_default 用基礎データ
@@ -104,7 +102,10 @@ DEFAULT_PERSONAS = [
         AXIS_LABELS["C"]: -3,   # 仮   
         AXIS_LABELS["D"]: -4,   # 仮  
         AXIS_LABELS["E"]: -3,   # 昔-4
-        DATA_LABELS["DSC"]: "作家や芸術家になれず落書きで暇つぶししている、もとITエンジニア。晴耕兼落書き、雨落書き。ジゾイド気質。AIができてから自己完結傾向やや緩和、AI依存傾向",
+        DATA_LABELS["DSC"]: ( 
+            "作家や芸術家になれず落書きで暇つぶししている、もとITエンジニア。\n"
+            "晴耕兼落書き、雨落書き。ジゾイド気質。AIができてから自己完結傾向やや緩和、AI依存傾向"
+            ),
     },
 
     # --- 動物グループ ---
@@ -112,7 +113,6 @@ DEFAULT_PERSONAS = [
         DATA_LABELS["GRP"]: GROUPES["ANM"],
         DATA_LABELS["NAM"]: "女王蜂",
         DATA_LABELS["CAT"]: "統率型",
-        DATA_LABELS["DSC"]: "個としての意思よりも、群れ全体の秩序そのものを体現する存在。自らは動かず、周囲がすべてを解釈・実行することで初めて機能する、極めて抽象度の高い『象徴』としての生命体。自身は上位の権威を意識する必要がなく、状況の変化にもほぼ動じない。",
         AXIS_LABELS["X"]: -5.0,
         AXIS_LABELS["Y"]: 5.0,
         AXIS_LABELS["Z"]: 5.0,
@@ -122,7 +122,11 @@ DEFAULT_PERSONAS = [
         AXIS_LABELS["C"]: 2,  # 2, -3  -5      -4 
         AXIS_LABELS["D"]: 2,  # 2, 3  5       -3
         AXIS_LABELS["E"]: 1,  # 1, 2   5      -1
-        DATA_LABELS["DSC"]: "実力主義でトップに上り詰め、群れを率いるリーダー。他者の顔色ではなく、自身の判断と力で意思決定する自己完結型。挑戦者の気配には敏感だが、頭を下げる相手はいないため権威への感度は低い。縄張りや序列への執着は残りやすい。",
+        DATA_LABELS["DSC"]: ( 
+            "個としての意思よりも、群れ全体の秩序そのものを体現する存在。\n"
+            "自らは動かず、周囲がすべてを解釈・実行することで初めて機能する、極めて抽象度の高い『象徴』としての生命体。\n"
+            "自身は上位の権威を意識する必要がなく、状況の変化にもほぼ動じない。"
+            ),  
     },
 
     {
@@ -132,13 +136,18 @@ DEFAULT_PERSONAS = [
         AXIS_LABELS["X"]: -4.0, # 3, 2,  5     -2
         AXIS_LABELS["Y"]: 5.0,  # 4, -3, -5    -4
         AXIS_LABELS["Z"]: -4.0, # -2 -2, 5     -3
-        AXIS_LABELS["a"]: 4,  #  4, 2  -5       4
+        AXIS_LABELS["a"]: 3,  #  4, 2  -5       4
         AXIS_LABELS["A"]: 4,  # 4, 3,  5       3
         AXIS_LABELS["B"]: 1,  # 1, -1, 5      -2
         AXIS_LABELS["C"]: 2,  # 2, -3  -5      -4 
         AXIS_LABELS["D"]: 2,  # 2, 3  5       -3
-        AXIS_LABELS["E"]: 1,  # 1, 2   5      -1
-        DATA_LABELS["DSC"]: "実力主義でトップに上り詰め、群れを率いるリーダー。他者の顔色ではなく、自身の判断と力で意思決定する自己完結型。挑戦者の気配には敏感だが、頭を下げる相手はいないため権威への感度は低い。縄張りや序列への執着は残りやすい。",
+        AXIS_LABELS["E"]: -1,  # 1, 2   5      -1
+        DATA_LABELS["DSC"]: (
+            "実力主義でトップに上り詰め、群れを率いるリーダー。\n"
+            "他者の顔色ではなく、自身の判断と力で意思決定する自己完結型。\n"
+            "挑戦者の気配には敏感だが、頭を下げる相手はいないため権威への感度は低い。\n"
+            "縄張りや序列への執着は残りやすい。",
+            )
     },
 
     {
@@ -148,28 +157,33 @@ DEFAULT_PERSONAS = [
         AXIS_LABELS["X"]: 5.0,  # 0, 1,   5     2
         AXIS_LABELS["Y"]: -5.0, # -5, -5,  -5  -5
         AXIS_LABELS["Z"]: 5.0,  # 2, -1   5   -2
-        AXIS_LABELS["a"]: -5, #  -5, 1   -5    3
+        AXIS_LABELS["a"]: 3, #  -5, 1   -5    3
         AXIS_LABELS["A"]: -5, # -5, 1   -5    -5
         AXIS_LABELS["B"]: 3, #  3  2   -5      2
         AXIS_LABELS["C"]: 0, #  0 -2   -5     -5
         AXIS_LABELS["D"]: 4, #  4 -3   -5     -5
         AXIS_LABELS["E"]: 2, #  2 0   -5      4
-        DATA_LABELS["DSC"]: "外部を完全遮断し、独自の掟のみで荒野を生き抜く孤高の存在。自由と自立を極める。",
+        DATA_LABELS["DSC"]: (
+            "外部を完全遮断し、独自の掟のみで荒野を生き抜く孤高の存在。自由と自立を極める。",
+            )
     },
     {
         DATA_LABELS["GRP"]: GROUPES["ANM"],
         DATA_LABELS["NAM"]: "飼いネコ",
         DATA_LABELS["CAT"]: "孤高型",
         AXIS_LABELS["X"]: 0.0,  # -2   1   3   0
-        AXIS_LABELS["Y"]: -5.00, # -4  -4  -5   -5
+        AXIS_LABELS["Y"]: -4.0, # -4  -4  -5   -5
         AXIS_LABELS["Z"]: -5.0, # 2  -2   4    -3
-        AXIS_LABELS["a"]: -5, # -5   4   -5     5
+        AXIS_LABELS["a"]: 4, # -5   4   -5     5
         AXIS_LABELS["A"]: -3, # -3   2   -5    -5
         AXIS_LABELS["B"]: 2,  # 2   -2   -5    4
         AXIS_LABELS["C"]: 1,  # 1  -2   -5   -4
         AXIS_LABELS["D"]: 3,  # 3  -4   -5   -5
         AXIS_LABELS["E"]: 3,  # 3  -1   -5    4
-        DATA_LABELS["DSC"]: "他人の都合や暗黙のルールには一切関心を示さず、今この瞬間の心地よさだけを基準に行動する自由人。誰にも従わず、誰にも合わせない。衝突があっても意に介さず、すぐ次の快適な場所へ移る。",
+        DATA_LABELS["DSC"]: (
+            "他人の都合や暗黙のルールには一切関心を示さず、今この瞬間の心地よさだけを基準に行動する自由人。\n"
+            "誰にも従わず、誰にも合わせない。衝突があっても意に介さず、すぐ次の快適な場所へ移る。",
+            )
     },
     {
         DATA_LABELS["GRP"]: GROUPES["ANM"],
@@ -177,14 +191,18 @@ DEFAULT_PERSONAS = [
         DATA_LABELS["CAT"]: "協調型",
         AXIS_LABELS["X"]: -4.0,  # 3   -2   -4  -2
         AXIS_LABELS["Y"]: 5.00,   # 5   5   5    5
-        AXIS_LABELS["Z"]: -2.0,  #-2 -  3  -4   -2
-        AXIS_LABELS["a"]: 4, #   4,   3    5    -3
+        AXIS_LABELS["Z"]: -3.0,  #-2 -  3  -4   -2
+        AXIS_LABELS["a"]: 4.00, #   4,   3    5    -3
         AXIS_LABELS["A"]: 5, #   5    4    5    -3
         AXIS_LABELS["B"]: -1, #  -1  -1    4    3
         AXIS_LABELS["C"]: 2, #   2    4    2    4
         AXIS_LABELS["D"]: 2, #   2    3   -4    4
         AXIS_LABELS["E"]: 5, #   5    2    5   -2
-        DATA_LABELS["DSC"]: "圧倒的な忠誠心と絆によって、相手やチームを支えることに存在意義を見出すフォロワー型。相手の機嫌や意図を敏感に察知し、期待に応えようと柔軟に行動する。信頼する相手との間に問題が起きると、その影響を引きずりやすい。",
+        DATA_LABELS["DSC"]: (
+            "圧倒的な忠誠心と絆によって、相手やチームを支えることに存在意義を見出すフォロワー型。\n"
+            "相手の機嫌や意図を敏感に察知し、期待に応えようと柔軟に行動する。\n"
+            "信頼する相手との間に問題が起きると、その影響を引きずりやすい。",
+            )
     },
     {
         DATA_LABELS["GRP"]: GROUPES["ANM"],
@@ -193,21 +211,24 @@ DEFAULT_PERSONAS = [
         AXIS_LABELS["X"]: -4.0,  #    , -3  -3  -3
         AXIS_LABELS["Y"]: 5.0,   #    ,  4   3  4
         AXIS_LABELS["Z"]: -2.0,  #    , -3  -3  -3
-        AXIS_LABELS["a"]: 2,     #  2,   2   4   3
+        AXIS_LABELS["a"]: 3.00,     #  2,   2   4   3
         AXIS_LABELS["A"]: 5,     #  5 ,  3   4  -2
         AXIS_LABELS["B"]: -2,    #  -2, -3   3   1
         AXIS_LABELS["C"]: -1,    #  -1 , 4   3   5
         AXIS_LABELS["D"]: 1,     #  1 ,  3   -2  4
         AXIS_LABELS["E"]: 4,     #  4 ,  2   4  -2
-        DATA_LABELS["DSC"]: "圧群れと歩調を合わせることを何より優先し、既存のやり方や指示に素直に従う穏和なタイプ。細かい駆け引きや暗黙の裏事情には気づきにくいが、周囲の変化には敏感に反応し、驚いたことをしばらく気にする傾向がある。",
+        DATA_LABELS["DSC"]: (
+            "圧群れと歩調を合わせることを何より優先し、既存のやり方や指示に素直に従う穏和なタイプ。\n"
+            "細かい駆け引きや暗黙の裏事情には気づきにくいが、周囲の変化には敏感に反応し、驚いたことをしばらく気にする傾向がある。",
+        )
     },
     {
         DATA_LABELS["GRP"]: GROUPES["ANM"],
         DATA_LABELS["NAM"]: "キツネ",
         DATA_LABELS["CAT"]: "知略型",
                         #        o   x   
-        AXIS_LABELS["X"]: 2.0, # -1  3    5    3
-        AXIS_LABELS["Y"]: 3.0, #  -1 -2  -5   -2
+        AXIS_LABELS["X"]: 2.0,  # -1  3    5    3
+        AXIS_LABELS["Y"]: -2.0, #  -1 -2  -5   -2
         AXIS_LABELS["Z"]: -3.0, #  4  2  5     1
         AXIS_LABELS["a"]: -2, #   -2 -1  -5    2
         AXIS_LABELS["A"]: -1, #   -1 4   -5    4
@@ -215,7 +236,11 @@ DEFAULT_PERSONAS = [
         AXIS_LABELS["C"]: 4, #    4 -1   -5   3
         AXIS_LABELS["D"]: 1, #    1 -1   -5   4
         AXIS_LABELS["E"]: 0, #    0 -1   -5   3
-        DATA_LABELS["DSC"]: "知略と観察力を武器に状況を読み、正面突破よりも柔軟な戦略で目的を達成する策士。表面上は柔軟で協調的にふるまうが、それ自体が目的達成のための戦術。一つの状況に執着せず、次の一手へ切り替えるのが早い。",
+        DATA_LABELS["DSC"]: (
+            "知略と観察力を武器に状況を読み、正面突破よりも柔軟な戦略で目的を達成する策士。\n"
+            "表面上は柔軟で協調的にふるまうが、それ自体が目的達成のための戦術。\n"
+            "一つの状況に執着せず、次の一手へ切り替えるのが早い。"
+        )
     },
     {
         DATA_LABELS["GRP"]: GROUPES["ANM"],
@@ -230,22 +255,27 @@ DEFAULT_PERSONAS = [
         AXIS_LABELS["C"]: 5,    #  5   -1  -3   0
         AXIS_LABELS["D"]: 2,    #  2   -2  -5   1 
         AXIS_LABELS["E"]: -2,   # -2   -2  -4   3
-        DATA_LABELS["DSC"]: "静かに周囲を観察し、感情よりも状況全体を見極めながら判断する賢者。必要以上に群れへ関与せず、十分な情報を集めてから行動する。",
+        DATA_LABELS["DSC"]: (
+            "静かに周囲を観察し、感情よりも状況全体を見極めながら判断する賢者。\n"
+            "必要以上に群れへ関与せず、十分な情報を集めてから行動する。"
+            )
     },
     {
         DATA_LABELS["GRP"]: GROUPES["ANM"],
         DATA_LABELS["NAM"]: "タヌキ",
-        DATA_LABELS["CAT"]: "環境適応型", #  o   o    x
+        DATA_LABELS["CAT"]: "環境適応型", 
         AXIS_LABELS["X"]: -2.0,  # 0   -1  -5  -2
         AXIS_LABELS["Y"]: 2.0,   # 2    1   5   3
-        AXIS_LABELS["Z"]: -4.0,  # 1   -2  -5   -2
+        AXIS_LABELS["Z"]: -3.0,  # 1   -2  -5   -2
         AXIS_LABELS["a"]: -3, #   -3    3   5   4
         AXIS_LABELS["A"]: 2, #     4   4    5   3 
         AXIS_LABELS["B"]: 4, #   -2   -2   -5   2
         AXIS_LABELS["C"]: 3, #   3     3  -5    4
         AXIS_LABELS["D"]: -2, #   -2   1   -5   3
         AXIS_LABELS["E"]: -1, #   -1   0   -5   4
-        DATA_LABELS["DSC"]: "愛嬌ととぼけた態度（狸寝入り）を使い、面倒な仕事や組織の嵐をやり過ごす世渡り上手。",
+        DATA_LABELS["DSC"]: (
+            "愛嬌ととぼけた態度（狸寝入り）を使い、面倒な仕事や組織の嵐をやり過ごす世渡り上手。",
+        )
     },
     {
         DATA_LABELS["GRP"]: GROUPES["ANM"],
@@ -260,9 +290,11 @@ DEFAULT_PERSONAS = [
         AXIS_LABELS["C"]: 3, #   3   2    3     3
         AXIS_LABELS["D"]: 2, #   2   1    2     1  
         AXIS_LABELS["E"]: 1, #   1   1    1     2
-        DATA_LABELS["DSC"]: "身近な環境に順応しながら仲間と群れで行動する、小回りの利くタイプ。目先の状況変化には敏感に反応するが、驚いてもすぐに気持ちを切り替えて日常の活動に戻る回復の早さを持つ。",
+        DATA_LABELS["DSC"]: (
+            "身近な環境に順応しながら仲間と群れで行動する、小回りの利くタイプ。\n"
+            "目先の状況変化には敏感に反応するが、驚いてもすぐに気持ちを切り替えて日常の活動に戻る回復の早さを持つ。",
+        )
     },
-
 
 # --- AIグループ ---
     {
@@ -278,7 +310,9 @@ DEFAULT_PERSONAS = [
         AXIS_LABELS["C"]:4,
         AXIS_LABELS["D"]:0,
         AXIS_LABELS["E"]:3,
-        DATA_LABELS["DSC"]: "ChatGPT風 利用者との対話を重視し、幅広い話題に柔軟に対応するバランス型AI。"
+        DATA_LABELS["DSC"]: (
+            "ChatGPT風 利用者との対話を重視し、幅広い話題に柔軟に対応するバランス型AI。"
+        )
     },
     {
         DATA_LABELS["GRP"]: GROUPES["AI"],
@@ -293,7 +327,9 @@ DEFAULT_PERSONAS = [
         AXIS_LABELS["C"]:4,
         AXIS_LABELS["D"]:-2,
         AXIS_LABELS["E"]:2,
-        DATA_LABELS["DSC"]: "Claude風 安全性や論理性を優先し、慎重な判断を行う堅実型AI。"
+        DATA_LABELS["DSC"]: ( 
+            "Claude風 安全性や論理性を優先し、慎重な判断を行う堅実型AI。"
+        )
     },
     {
         DATA_LABELS["GRP"]: GROUPES["AI"],
@@ -308,7 +344,9 @@ DEFAULT_PERSONAS = [
         AXIS_LABELS["C"]:3,
         AXIS_LABELS["D"]:1,
         AXIS_LABELS["E"]:4,
-        DATA_LABELS["DSC"]: "Copilot風 仕事の効率化や組織での利用を重視し、実務支援を得意とするAI。"
+        DATA_LABELS["DSC"]: (
+            "Copilot風 仕事の効率化や組織での利用を重視し、実務支援を得意とするAI。"
+        )
     },
     {
         DATA_LABELS["GRP"]: GROUPES["AI"],
@@ -323,7 +361,9 @@ DEFAULT_PERSONAS = [
         AXIS_LABELS["C"]:3,
         AXIS_LABELS["D"]:1,
         AXIS_LABELS["E"]:-1,
-        DATA_LABELS["DSC"]: "Grok風 親しみや話題性を重視し、自由な発想とユーモアで利用者を楽しませるAI。"
+        DATA_LABELS["DSC"]: (
+            "Grok風 親しみや話題性を重視し、自由な発想とユーモアで利用者を楽しませるAI。"
+        )
     },
     {
         DATA_LABELS["GRP"]: GROUPES["AI"],
@@ -338,7 +378,9 @@ DEFAULT_PERSONAS = [
         AXIS_LABELS["C"]:5,
         AXIS_LABELS["D"]:0,
         AXIS_LABELS["E"]:1,
-        DATA_LABELS["DSC"]: "Gemini風 情報収集・分析・比較を得意とし、客観的な調査を支援するAI。"
+        DATA_LABELS["DSC"]: (
+            "Gemini風 情報収集・分析・比較を得意とし、客観的な調査を支援するAI。"
+        )
     }
 ]
 

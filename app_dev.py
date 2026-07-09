@@ -1,4 +1,5 @@
 import streamlit as st
+import streamlit.components.v1 as components
 import pandas as pd
 import plotly.graph_objects as go
 import math
@@ -22,8 +23,37 @@ from three_d_plot_constants import GROUPES, AXIS_PREFIX, AXIS_SUFFIX, AXIS_LABEL
 # ==========================================
 st.set_page_config(layout="wide", page_title="3D性格プロッター", page_icon="🌐")
 
-st.title("3D性格プロッター（思考傾向・相性診断システム） 0.08d11/Data:" + DEFALUT_DATA_VERSION)
+st.title("3D性格プロッター（思考傾向・相性診断システム） 0.08d12/Data:" + DEFALUT_DATA_VERSION)
 
+# ここでの言語指定は無意味。　StreamLit側が、<html lang="en">と書いている。
+## JavaScriptで html lang を日本語に変更（ブラウザの翻訳提案を抑制）
+#st.markdown("""
+#<script>
+#document.documentElement.lang = 'ja';
+#</script>
+#""", unsafe_allow_html=True)
+
+# 💡【翻訳ポップアップ防止ハック】 ### 結果的には無意味?
+components.html(
+    """
+    <script>
+        try {
+            // 1. 親ドキュメントのlang属性をjaに変更（念のため）
+            window.parent.document.documentElement.lang = 'ja';
+            
+            // 2. Google翻訳を強制的に無効化するメタタグを作成してheadに追加
+            var meta = window.parent.document.createElement('meta');
+            meta.name = 'google';
+            meta.content = 'notranslate';
+            window.parent.document.getElementsByTagName('head')[0].appendChild(meta);
+        } catch (e) {
+            console.log("iframeのセキュリティ制限によりブロックされました");
+        }
+    </script>
+    """,
+    width=0,
+    height=0
+)
 
 val_html = "<div><p>"
 val_html +=  "【目的】人間の思考傾向を「X・Y・Zの3つの次元」で可視化し、ペルソナ間の相性やコミュニケーションエラーを予測するツールです。</br>"
@@ -501,9 +531,10 @@ with plot_col:
                         f"Y ({AXIS_NAME['Y']}): %{{y}}<br>"
                         f"Z ({AXIS_NAME['Z']}): %{{z}}<br>"
                         f"α ({AXIS_NAME['a']}): %{{customdata[3]}}<br>"
-                        f"{DATA_LABELS['DSC']}: %{{customdata[4]}}<extra></extra>"
+                        f"{DATA_LABELS['DSC']}:<br>%{{customdata[4]}}"
                     ), 
-                    customdata=df_draw[[DATA_LABELS["NAM"], DATA_LABELS["GRP"], DATA_LABELS["CAT"], AXIS_LABELS["a"], DATA_LABELS["DSC"]]],
+                    customdata=df_draw[[DATA_LABELS["NAM"], DATA_LABELS["GRP"], DATA_LABELS["CAT"], AXIS_LABELS["a"],
+                                        DATA_LABELS["DSC"]]],
 
                     name=df_draw_type,
                     showlegend=False,                   # 凡例非表示 
@@ -513,16 +544,25 @@ with plot_col:
         
         for group_name, group_df in df_final.groupby("グループ"):
 
+
+# df_draw[DATA_LABELS["DSC"] + "_formatted"] = df_draw[DATA_LABELS["DSC"]].str.replace("。", "。<br>")
+# customdata=df_draw[[DATA_LABELS["NAM"], ..., DATA_LABELS["DSC"] + "_formatted"]]
+
+
             # A. デフォルトペルソナ(グループが、カスタム以外)のプロット
             draw_3d_markers(fig, 
-                            df_final[df_final[DATA_LABELS["GRP"]] != GROUPES["CST"]].copy(),
+#                            df_final[df_final[DATA_LABELS["GRP"]] != GROUPES["CST"]].copy(),
+
+                            df_final[df_final[DATA_LABELS["GRP"]] != GROUPES["CST"]].replace(r"\n","<br>", regex=True).copy(),
+
+
                             GROUPES["DEF"],
                             legend_displayed_flag)
 
             # B. カスタムペルソナ(グループが、カスタム)のプロット
 
             draw_3d_markers(fig, 
-                            df_final[df_final[DATA_LABELS["GRP"]] == GROUPES["CST"]].copy(),
+                            df_final[df_final[DATA_LABELS["GRP"]] == GROUPES["CST"]].replace(r"\n","<br>", regex=True).copy(),
                             GROUPES["CST"],
                             legend_displayed_flag)
 
@@ -593,7 +633,7 @@ with plot_col:
 
 with grade_col:
     st.markdown(
-        "<div style='text-align: center; font-weight: bold; margin-bottom: 10px;'>📊 3軸目盛り</div>",
+        "<div style='text-align: center; font-weight: bold; margin-bottom: 10px;'>📊XYZ軸／α軸 表示色</div>",
         unsafe_allow_html=True,
     )
 
@@ -603,9 +643,12 @@ with grade_col:
     # 💡 5列（数値用、X軸、Y軸、Z軸、a軸）に小さく均等分割します
     c_val, c_x, c_y, c_z, c_a = st.columns(5)
 
-    # 共通のブロックサイズ設定
-    block_style = "width:22px; height:22px; display:flex; align-items:center; justify-content:center; border-radius:3px; font-size:10px; font-weight:bold; font-family:monospace;"
-
+    # 共通のバーグラフ用タイルのブロックサイズ設定
+    block_style = (
+        "width:22px; height:22px; display:flex; align-items:center;" 
+        "justify-content:center; border-radius:3px; font-size:10px; font-weight:bold; font-family:monospace;"
+        )
+    
     # --- 1列目：数値表示（左端・単色グレー） ---
     with c_val:
         st.markdown(
