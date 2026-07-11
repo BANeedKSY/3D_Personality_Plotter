@@ -4,7 +4,7 @@ import pandas as pd
 import plotly.graph_objects as go
 import math
 from three_d_plot_constants import DEFALUT_DATA_VERSION, STEP_MAX, STEP_MIN, DEFAULT_PERSONAS
-from three_d_plot_constants import GROUPES, AXIS_PREFIX, AXIS_SUFFIX, AXIS_LABELS, AXIS_NAME ,AXIS_DESC ,DATA_LABELS
+from three_d_plot_constants import GRPUPE_LABELS, GROUPE_NAME, GROUPE_INITIAL_DISPLAY, AXIS_PREFIX, AXIS_SUFFIX, AXIS_LABELS, AXIS_NAME ,AXIS_DESC ,DATA_LABELS
 
 # "ToDo: "
 
@@ -23,7 +23,7 @@ from three_d_plot_constants import GROUPES, AXIS_PREFIX, AXIS_SUFFIX, AXIS_LABEL
 # ==========================================
 st.set_page_config(layout="wide", page_title="3D性格プロッター", page_icon="🌐")
 
-st.title("3D性格プロッター（思考傾向・相性診断システム） 0.08d12/Data:" + DEFALUT_DATA_VERSION)
+st.title("3D性格プロッター（思考傾向・相性診断システム） 0.09D1/Data:" + DEFALUT_DATA_VERSION)
 
 # ここでの言語指定は無意味。　StreamLit側が、<html lang="en">と書いている。
 ## JavaScriptで html lang を日本語に変更（ブラウザの翻訳提案を抑制）
@@ -56,12 +56,13 @@ st.title("3D性格プロッター（思考傾向・相性診断システム） 0
 #    )
 
 val_html = "<div><p>"
-val_html +=  "【目的】人間の思考傾向を「X・Y・Zの3つの次元」で可視化し、ペルソナ間の相性やコミュニケーションエラーを予測するツールです。</br>"
-val_html +=  "【注意】思考傾向は気分や体調などで大きく変化します。またその変化傾向も人によって異なりますが、現版では考慮していません。（将来対応のつもりです。）</br>"
+val_html +=  "【目的】人間の思考傾向を「X・Y・Zの3つの次元」等で可視化し、ペルソナ間の相性やコミュニケーションエラーを予測するツールです。</br>"
+val_html +=  "【注意】思考傾向は気分や体調,時期などで大きく変化します。またその変化傾向も人によって異なりますが、現版では考慮していません。</br>"
 val_html +=  "【重要】<stong><A href='https://www.openrail.org/' target='_blank'>OpenRAIL（Open Responsible AI License）</A></stong>として公開しています。</br>"
 val_html +=  "<ul style='margin-left: 4em;'>"
 val_html +=  "<li><strong><font color='red'>他者の誹謗・中傷用などの悪用利用は厳格にお断りします。</font></strong></li>"
-val_html +=  "<li><strong><font color='red'>本版は、まだ開発途中で、十分な動作検証も行っていませんが、学術研究資料として無償で公開しています。</font></strong></li>"
+val_html +=  "<li><strong>本版は、まだ開発途中で、十分な動作検証も行っていませんが、<font color='red'>研究資料用として無償で公開しています。</font></strong></li>"
+val_html +=  "<li><strong>比較サンプルの特性値は作者の独断で仮設定しています。<font color='red'>正確さは一切保証していません。</font></strong></li>"
 val_html +=  "<li>ご意見等は歓迎いたしますが、ご希望に添えるかなどを含め、お返事はしない場合があります。</li>"
 val_html += "</ul>"
 val_html += "</p></div>"
@@ -189,9 +190,9 @@ with st.sidebar.expander("👤 カスタムペルソナ定義", expanded=False):
         "ペルソナ名 / ターゲット名", placeholder="例：自分、上司A、企画X"
     )
 
-    st.markdown("**" + AXIS_PREFIX + "X" + AXIS_SUFFIX + ":" + AXIS_NAME["X"]  + "**")
+    st.markdown("**" + AXIS_PREFIX + "X" + AXIS_SUFFIX + ":" + AXIS_NAME[AXIS_LABELS["X"]]  + "**")
     x_val = st.slider(
-        "[" + str(STEP_MIN) + ":" + AXIS_DESC["X"] + ":" + str(STEP_MAX) + "]",
+        "[" + str(STEP_MIN) + ":" + AXIS_DESC[AXIS_LABELS["X"]] + ":" + str(STEP_MAX) + "]",
         int(STEP_MIN),
         int(STEP_MAX),
         0,
@@ -199,9 +200,9 @@ with st.sidebar.expander("👤 カスタムペルソナ定義", expanded=False):
         key="slider_x",
     )
 
-    st.markdown("**" + AXIS_PREFIX + "Y" + AXIS_SUFFIX + ":" + AXIS_NAME["Y"]  + "**")
+    st.markdown("**" + AXIS_PREFIX + "Y" + AXIS_SUFFIX + ":" + AXIS_NAME[AXIS_LABELS["Y"]]  + "**")
     y_val = st.slider(
-        "[" + str(STEP_MIN) + ":" + AXIS_DESC["Y"] + ":" + str(STEP_MAX) + "]",
+        "[" + str(STEP_MIN) + ":" + AXIS_DESC[AXIS_LABELS["Y"]] + ":" + str(STEP_MAX) + "]",
         int(STEP_MIN),
         int(STEP_MAX),
         0,
@@ -209,9 +210,9 @@ with st.sidebar.expander("👤 カスタムペルソナ定義", expanded=False):
         key="slider_y",
     )
 
-    st.markdown("**" + AXIS_PREFIX + "Z" + AXIS_SUFFIX + ":" + AXIS_NAME["Z"]  + "**")
+    st.markdown("**" + AXIS_PREFIX + "Z" + AXIS_SUFFIX + ":" + AXIS_NAME[AXIS_LABELS["Z"]]  + "**")
     z_val = st.slider(
-        "[" + str(STEP_MIN) + ":" + AXIS_DESC["Z"] + ":" + str(STEP_MAX) + "]",
+        "[" + str(STEP_MIN) + ":" + AXIS_DESC[AXIS_LABELS["Z"]] + ":" + str(STEP_MAX) + "]",
         int(STEP_MIN),
         int(STEP_MAX),
         0,
@@ -219,9 +220,9 @@ with st.sidebar.expander("👤 カスタムペルソナ定義", expanded=False):
         key="slider_z",
     )
 
-    st.markdown("**" + AXIS_PREFIX + "a" + AXIS_SUFFIX + ":" + AXIS_NAME["a"]  + "**")
+    st.markdown("**" + AXIS_PREFIX + "a" + AXIS_SUFFIX + ":" + AXIS_NAME[AXIS_LABELS["a"]]  + "**")
     alfa_val = st.slider(
-        "[" + str(STEP_MIN) + ":" + AXIS_DESC["a"] + ":" + str(STEP_MAX) + "]",
+        "[" + str(STEP_MIN) + ":" + AXIS_DESC[AXIS_LABELS["a"]] + ":" + str(STEP_MAX) + "]",
         int(STEP_MIN),
         int(STEP_MAX),
         0,
@@ -242,7 +243,7 @@ if submit_button:
         st.sidebar.error("⚠️ 名前を入力してください。")
     else:
         new_persona = {
-            DATA_LABELS["GRP"]: GROUPES["CST"],
+            DATA_LABELS["GRP"]: GROUPE_NAME[GRPUPE_LABELS["CST"]],
             DATA_LABELS["NAM"]: name.strip(),
             AXIS_LABELS["X"]: x_val,
             AXIS_LABELS["Y"]: y_val,
@@ -283,16 +284,33 @@ else:
 st.sidebar.write("---")
 st.sidebar.header("📁 グループの絞り込み")
 
-# 存在するユニークなグループ名の一覧を取得
-available_groups = df_all[DATA_LABELS["GRP"]].unique().tolist()
+available_groups = sorted(df_all[DATA_LABELS["GRP"]].unique().tolist())
 
-# マルチセレクトでグループを選択（初期値はすべてのグループを選択状態に）
-selected_groups = st.sidebar.multiselect(
-    "表示するグループを選択:", options=available_groups, default=available_groups
+initial_group_display = {
+    GROUPE_NAME[group_code]: is_display
+    for group_code, is_display in GROUPE_INITIAL_DISPLAY.items()
+}
+
+selected_groups = []
+for group_name in available_groups:
+    default_checked = initial_group_display.get(group_name, True)
+    if st.sidebar.checkbox(
+        f"{group_name}",
+        value=default_checked,
+        key=f"group_filter_{group_name}",
+    ):
+        selected_groups.append(group_name)
+
+# 選択されたグループだけに絞り込む（1次抽出）
+df_group_filtered = (
+    df_all[df_all[DATA_LABELS["GRP"]].isin(selected_groups)]
+    if selected_groups
+    else df_all.iloc[0:0]
 )
+df_groupe_filtered = df_group_filtered
 
-# 選択されたグループのデータだけに絞り込む（1次抽出）
-df_group_filtered = df_all[df_all[DATA_LABELS["GRP"]].isin(selected_groups)]
+#    available_groups = df_all[DATA_LABELS["GRP"]].unique().tolist()
+
 
 # ==========================================
 # 【修正】② 動的凡例チェックボックス（2次フィルタリング）
@@ -448,9 +466,9 @@ with plot_col:
             if not df_draw.empty:
                 fig.add_trace(
                     go.Scatter3d(
-                        x=group_df[AXIS_LABELS["X"]],
-                        y=group_df[AXIS_LABELS["Y"]],
-                        z=group_df[AXIS_LABELS["Z"]],
+                        x=group_df[AXIS_LABELS[AXIS_LABELS['X']]],
+                        y=group_df[AXIS_LABELS[AXIS_LABELS['Y']]],
+                        z=group_df[AXIS_LABELS[AXIS_LABELS['Z']]],
                         mode="text",
                         name=group_name,  # 凡例にグループ名が表示されます
                         text=group_df[DATA_LABELS["NAM"]],
@@ -460,7 +478,7 @@ with plot_col:
                 )
 
                 # ペルソナのプロット（ぶりつぶし色は属性を反映）
-                if df_draw_type != GROUPES["CST"]:
+                if df_draw_type != GROUPE_NAME[GRPUPE_LABELS["CST"]]:
                     # shadow_color='lightgray'            # 規定ペルソナは背景円示の色を薄い灰色にしてデフォルトペルソナを目立たせない
                     shadow_shape = 'circle'
                 else:
@@ -473,9 +491,9 @@ with plot_col:
                 
                 fig.add_trace(go.Scatter3d(
 
-                    x=df_draw[AXIS_LABELS["X"]],
-                    y=df_draw[AXIS_LABELS["Y"]],
-                    z=df_draw[AXIS_LABELS["Z"]],
+                    x=df_draw[AXIS_LABELS[AXIS_LABELS['X']]],
+                    y=df_draw[AXIS_LABELS[AXIS_LABELS['Y']]],
+                    z=df_draw[AXIS_LABELS[AXIS_LABELS['Z']]],
                     
                     text=group_df[DATA_LABELS["NAM"]],
                     #mode='markers+text',               # 名前も表示する場合は 'markers+text' に変更
@@ -491,17 +509,31 @@ with plot_col:
                         color=df_draw["color_e"],
                         opacity=0.7                     # 薄く透けさせる
                     ),
-                    hoverinfo='skip',                   # ホバー情報は表示しない
+                    # 吹き出し
+                    hovertemplate = (
+                        f"<b>%{{customdata[0]}}</b><br>"
+                        f"%{{customdata[1]}} %{{customdata[2]}}<br>"
+                        f"X ({AXIS_NAME[AXIS_LABELS['X']]}): %{{x}}<br>"
+                        f"Y ({AXIS_NAME[AXIS_LABELS['Y']]}): %{{y}}<br>"
+                        f"Z ({AXIS_NAME[AXIS_LABELS['Z']]}): %{{z}}<br>"
+                        f"α ({AXIS_NAME[AXIS_LABELS['a']]}): %{{customdata[3]}}<br>"
+                        f"{DATA_LABELS['DSC']}:<br>%{{customdata[4]}}"
+                    ), 
+                    customdata=df_draw[[DATA_LABELS["NAM"], DATA_LABELS["GRP"], DATA_LABELS["CAT"], AXIS_LABELS["a"],
+                                        DATA_LABELS["DSC"]]],
+
                     name=df_draw_type,
                     showlegend=not legend_state,        # 背景円を凡例として表状　 非表示だったら表示 
+
+
                 ))
                 
                 # ② その上にマーカーを所定の外形でクッキリ描画
 
                 fig.add_trace(go.Scatter3d(
-                    x=df_draw[AXIS_LABELS["X"]],
-                    y=df_draw[AXIS_LABELS["Y"]],
-                    z=df_draw[AXIS_LABELS["Z"]],
+                    x=df_draw[AXIS_LABELS[AXIS_LABELS['X']]],
+                    y=df_draw[AXIS_LABELS[AXIS_LABELS['Y']]],
+                    z=df_draw[AXIS_LABELS[AXIS_LABELS['Z']]],
                     #a=df_draw[AXIS_LABELS["a"]],
 
                     # mode='markers+text',              # 名前も表示する場合は 'markers+text' に変更
@@ -522,15 +554,15 @@ with plot_col:
                         color=df_draw["color"],         # 予め計算しておいた色を設定
                         opacity=1.0
                     ),
-
+                    # hoverinfo='skip',                   # 吹き出し(ホバー情報)非表示の場合
                     # 吹き出し
                     hovertemplate = (
                         f"<b>%{{customdata[0]}}</b><br>"
                         f"%{{customdata[1]}} %{{customdata[2]}}<br>"
-                        f"X ({AXIS_NAME['X']}): %{{x}}<br>"
-                        f"Y ({AXIS_NAME['Y']}): %{{y}}<br>"
-                        f"Z ({AXIS_NAME['Z']}): %{{z}}<br>"
-                        f"α ({AXIS_NAME['a']}): %{{customdata[3]}}<br>"
+                        f"X ({AXIS_NAME[AXIS_LABELS['X']]}): %{{x}}<br>"
+                        f"Y ({AXIS_NAME[AXIS_LABELS['Y']]}): %{{y}}<br>"
+                        f"Z ({AXIS_NAME[AXIS_LABELS['Z']]}): %{{z}}<br>"
+                        f"α ({AXIS_NAME[AXIS_LABELS['a']]}): %{{customdata[3]}}<br>"
                         f"{DATA_LABELS['DSC']}:<br>%{{customdata[4]}}"
                     ), 
                     customdata=df_draw[[DATA_LABELS["NAM"], DATA_LABELS["GRP"], DATA_LABELS["CAT"], AXIS_LABELS["a"],
@@ -551,19 +583,16 @@ with plot_col:
 
             # A. デフォルトペルソナ(グループが、カスタム以外)のプロット
             draw_3d_markers(fig, 
-#                            df_final[df_final[DATA_LABELS["GRP"]] != GROUPES["CST"]].copy(),
-
-                            df_final[df_final[DATA_LABELS["GRP"]] != GROUPES["CST"]].replace(r"\n","<br>", regex=True).copy(),
-
-
-                            GROUPES["DEF"],
+#                           df_final[df_final[DATA_LABELS["GRP"]] != GROUPES["CST"]].replace(r"\n","<br>", regex=True).copy(),
+                            df_final[df_final[DATA_LABELS["GRP"]] != GROUPE_NAME[GRPUPE_LABELS["CST"]]].replace(r"\n","<br>", regex=True).copy(),
+                            GROUPE_NAME[GRPUPE_LABELS["DEF"]],
                             legend_displayed_flag)
 
             # B. カスタムペルソナ(グループが、カスタム)のプロット
 
             draw_3d_markers(fig, 
-                            df_final[df_final[DATA_LABELS["GRP"]] == GROUPES["CST"]].replace(r"\n","<br>", regex=True).copy(),
-                            GROUPES["CST"],
+                            df_final[df_final[DATA_LABELS["GRP"]] == GROUPE_NAME[GRPUPE_LABELS["CST"]]].replace(r"\n","<br>", regex=True).copy(),
+                            GROUPE_NAME[GRPUPE_LABELS["CST"]],
                             legend_displayed_flag)
 
             legend_displayed_flag = True  # 凡例表示済みフラグを True に設定
@@ -583,17 +612,17 @@ with plot_col:
             margin=dict(l=0, r=0, b=0, t=30),
             scene=dict(
                 xaxis=dict(
-                    title=AXIS_LABELS["X"] + ":" + AXIS_NAME["X"] + "(" + AXIS_DESC["X"] + ")",
+                    title=AXIS_LABELS["X"] + ":" + AXIS_NAME[AXIS_LABELS['X']] + "(" + AXIS_DESC[AXIS_LABELS['X']] + ")",
                     range=[STEP_MIN - 0.5, STEP_MAX + 0.5],
                     gridcolor="rgba(128,128,128,0.2)",
                 ),
                 yaxis=dict(
-                    title=AXIS_LABELS["Y"] + ":" + AXIS_NAME["Y"] + "(" + AXIS_DESC["Y"] + ")",
+                    title=AXIS_LABELS["Y"] + ":" + AXIS_NAME[AXIS_LABELS["Y"]] + "(" + AXIS_DESC[AXIS_LABELS["Y"]] + ")",
                     range=[STEP_MIN - 0.5, STEP_MAX + 0.5],
                     gridcolor="rgba(128,128,128,0.2)",
                 ),
                 zaxis=dict(
-                    title=AXIS_LABELS["Z"] + ":" + AXIS_NAME["Z"] + "(" + AXIS_DESC["Z"] + ")",
+                    title=AXIS_LABELS["Z"] + ":" + AXIS_NAME[AXIS_LABELS["Z"]] + "(" + AXIS_DESC[AXIS_LABELS["Z"]] + ")",
                     range=[STEP_MIN - 0.5, STEP_MAX + 0.5],
                     gridcolor="rgba(128,128,128,0.2)",
                 ),
@@ -633,7 +662,7 @@ with plot_col:
 
 with grade_col:
     st.markdown(
-        "<div style='text-align: center; font-weight: bold; margin-bottom: 10px;'>📊XYZ軸／α軸 表示色</div>",
+        "<div style='text-align: center; font-weight: bold; margin-bottom: 10px;'>📊XYZ軸(内側)／α軸(周囲) 表示色</div>",
         unsafe_allow_html=True,
     )
 
@@ -713,7 +742,15 @@ with grade_col:
         a_html = "<div style='display: flex; flex-direction: column; gap: 4px; align-items: center;'>"
         for v in steps_reverse:
             color = generate_emotionality_color(STEP_MIN, STEP_MAX, v)  # a軸の値に基づく色を生成
-            a_html += f"<div style='background-color:{color}; border:1px solid #B0BEC5; {block_style}'></div>"
+            a_html += (
+##                    f"<div style='background-color:{color}; border:1px solid #B0BEC5; {block_style}'>"
+##                    f"<p >●●</p></div>"
+#                    f"<p style='color:{color};'>●■</p>"
+
+                    f"<div style='color:{color}; {block_style}'>●■</div>"
+
+            )
+            
         a_html += "</div>"
         st.markdown(a_html, unsafe_allow_html=True)
 
@@ -773,7 +810,7 @@ else:
     # 選択されたペルソナと他の全ペルソナを比較
     for idx, row in df_all.iterrows():
         # 自分自身（同じ名前かつ同じタイプ）との比較はスキップ
-        if row[DATA_LABELS["NAM"]] == target_name and row[DATA_LABELS["GRP"]] == GROUPES["CST"]:
+        if row[DATA_LABELS["NAM"]] == target_name and row[DATA_LABELS["GRP"]] == GROUPE_NAME[GRPUPE_LABELS["CST"]]:
             continue
 
         # 1. 3次元ユークリッド距離の計算
@@ -832,7 +869,7 @@ else:
 
         # アコーディオンパネルで綺麗に出力
         # ToDo: グループのアイコン変更？
-        icon = "🦊" if row[DATA_LABELS["GRP"]] == GROUPES["CST"] else "👤"
+        icon = "🦊" if row[DATA_LABELS["GRP"]] == GROUPE_NAME[GRPUPE_LABELS["CST"]] else "👤"
         with st.expander(f"{icon} {row[DATA_LABELS['NAM']]}（空間距離: {dist:.2f}）"):
             #
             st.write(
