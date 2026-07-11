@@ -4,7 +4,8 @@ import pandas as pd
 import plotly.graph_objects as go
 import math
 from three_d_plot_constants import DEFALUT_DATA_VERSION, STEP_MAX, STEP_MIN, DEFAULT_PERSONAS
-from three_d_plot_constants import GRPUPE_LABELS, GROUPE_NAME, GROUPE_INITIAL_DISPLAY, AXIS_PREFIX, AXIS_SUFFIX, AXIS_LABELS, AXIS_NAME ,AXIS_DESC ,DATA_LABELS
+from three_d_plot_constants import GRPUPE_LABELS, GROUPE_NAME, GROUPE_INITIAL_DISPLAY
+from three_d_plot_constants import AXIS_PREFIX, AXIS_SUFFIX, AXIS_LABELS, AXIS_NAME ,AXIS_DESC ,DATA_LABELS
 
 # "ToDo: "
 
@@ -23,7 +24,7 @@ from three_d_plot_constants import GRPUPE_LABELS, GROUPE_NAME, GROUPE_INITIAL_DI
 # ==========================================
 st.set_page_config(layout="wide", page_title="3D性格プロッター", page_icon="🌐")
 
-st.title("3D性格プロッター（思考傾向・相性診断システム） 0.09D1/Data:" + DEFALUT_DATA_VERSION)
+st.title("3D性格プロッター（思考傾向・相性診断システム） 0.09D2/Data:" + DEFALUT_DATA_VERSION)
 
 # ここでの言語指定は無意味。　StreamLit側が、<html lang="en">と書いている。
 ## JavaScriptで html lang を日本語に変更（ブラウザの翻訳提案を抑制）
