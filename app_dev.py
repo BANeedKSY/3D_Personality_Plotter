@@ -4,7 +4,7 @@ import pandas as pd
 import plotly.graph_objects as go
 import math
 from three_d_plot_constants import DEFALUT_DATA_VERSION, STEP_MAX, STEP_MIN, DEFAULT_PERSONAS
-from three_d_plot_constants import GRPUPE_LABELS, GROUPE_NAME, GROUPE_INITIAL_DISPLAY
+from three_d_plot_constants import GROUPE_IDS, GROUPE_NAME, GROUPE_INITIAL_DISPLAY
 from three_d_plot_constants import AXIS_PREFIX, AXIS_SUFFIX, AXIS_LABELS, AXIS_NAME ,AXIS_DESC ,DATA_LABELS
 
 # "ToDo: "
@@ -24,7 +24,7 @@ from three_d_plot_constants import AXIS_PREFIX, AXIS_SUFFIX, AXIS_LABELS, AXIS_N
 # ==========================================
 st.set_page_config(layout="wide", page_title="3D性格プロッター", page_icon="🌐")
 
-st.title("3D性格プロッター（思考傾向・相性診断システム） 0.09D2/Data:" + DEFALUT_DATA_VERSION)
+st.title("3D性格プロッター（思考傾向・相性推定システム） 0.10D3/Data:" + DEFALUT_DATA_VERSION)
 
 # ここでの言語指定は無意味。　StreamLit側が、<html lang="en">と書いている。
 ## JavaScriptで html lang を日本語に変更（ブラウザの翻訳提案を抑制）
@@ -57,7 +57,7 @@ st.title("3D性格プロッター（思考傾向・相性診断システム） 0
 #    )
 
 val_html = "<div><p>"
-val_html +=  "【目的】人間の思考傾向を「X・Y・Zの3つの次元」等で可視化し、ペルソナ間の相性やコミュニケーションエラーを予測するツールです。</br>"
+val_html +=  "【目的】人間の思考傾向を「X・Y・Zの3つの次元」等で可視化し、ペルソナ間の相性やコミュニケーションエラーを予測・推定するツールです。</br>"
 val_html +=  "【注意】思考傾向は気分や体調,時期などで大きく変化します。またその変化傾向も人によって異なりますが、現版では考慮していません。</br>"
 val_html +=  "【重要】<stong><A href='https://www.openrail.org/' target='_blank'>OpenRAIL（Open Responsible AI License）</A></stong>として公開しています。</br>"
 val_html +=  "<ul style='margin-left: 4em;'>"
@@ -162,7 +162,7 @@ def generate_emotionality_color(step_min, step_max, num_a):
 
 
 
-# ==========================================
+# =========================================="]],
 # 2. セッション状態（ユーザー定義データ）の管理
 # ==========================================
 if "custom_personas" not in st.session_state:
@@ -231,6 +231,56 @@ with st.sidebar.expander("👤 カスタムペルソナ定義", expanded=False):
         key="slider_alfa",
     )
 
+    st.markdown("**" + AXIS_PREFIX + "A" + AXIS_SUFFIX + ":" + AXIS_NAME[AXIS_LABELS["A"]]  + "**")
+    a_val = st.slider(
+        "[" + str(STEP_MIN) + ":" + AXIS_DESC[AXIS_LABELS["A"]] + ":" + str(STEP_MAX) + "]",
+        int(STEP_MIN),
+        int(STEP_MAX),
+        0,
+        1,
+        key="slider_a",
+    )
+
+    st.markdown("**" + AXIS_PREFIX + "B" + AXIS_SUFFIX + ":" + AXIS_NAME[AXIS_LABELS["B"]]  + "**")
+    b_val = st.slider(
+        "[" + str(STEP_MIN) + ":" + AXIS_DESC[AXIS_LABELS["B"]] + ":" + str(STEP_MAX) + "]",
+        int(STEP_MIN),
+        int(STEP_MAX),
+        0,
+        1,
+        key="slider_b",
+    )
+
+    st.markdown("**" + AXIS_PREFIX + "C" + AXIS_SUFFIX + ":" + AXIS_NAME[AXIS_LABELS["C"]]  + "**")
+    c_val = st.slider(
+        "[" + str(STEP_MIN) + ":" + AXIS_DESC[AXIS_LABELS["C"]] + ":" + str(STEP_MAX) + "]",
+        int(STEP_MIN),
+        int(STEP_MAX),
+        0,
+        1,
+        key="slider_c",
+    )
+
+    st.markdown("**" + AXIS_PREFIX + "D" + AXIS_SUFFIX + ":" + AXIS_NAME[AXIS_LABELS["D"]]  + "**")
+    d_val = st.slider(
+        "[" + str(STEP_MIN) + ":" + AXIS_DESC[AXIS_LABELS["D"]] + ":" + str(STEP_MAX) + "]",
+        int(STEP_MIN),
+        int(STEP_MAX),
+        0,
+        1,
+        key="slider_d",
+    )
+
+    st.markdown("**" + AXIS_PREFIX + "E" + AXIS_SUFFIX + ":" + AXIS_NAME[AXIS_LABELS["E"]]  + "**")
+    e_val = st.slider(
+        "[" + str(STEP_MIN) + ":" + AXIS_DESC[AXIS_LABELS["E"]] + ":" + str(STEP_MAX) + "]",
+        int(STEP_MIN),
+        int(STEP_MAX),
+        0,
+        1,
+        key="slider_e",
+    )
+
     desc = st.text_area(
         "説明（特徴や行動特性など）",
         placeholder="ターゲットの性格や行動の特徴に関するメモ",
@@ -244,17 +294,17 @@ if submit_button:
         st.sidebar.error("⚠️ 名前を入力してください。")
     else:
         new_persona = {
-            DATA_LABELS["GRP"]: GROUPE_NAME[GRPUPE_LABELS["CST"]],
+            DATA_LABELS["GRP"]: GROUPE_IDS["CST"],
             DATA_LABELS["NAM"]: name.strip(),
             AXIS_LABELS["X"]: x_val,
             AXIS_LABELS["Y"]: y_val,
             AXIS_LABELS["Z"]: z_val,
             AXIS_LABELS["a"]: alfa_val,
-            AXIS_LABELS["A"]: 0,
-            AXIS_LABELS["B"]: 0,
-            AXIS_LABELS["C"]: 0,
-            AXIS_LABELS["D"]: 0,
-            AXIS_LABELS["E"]: 0,
+            AXIS_LABELS["A"]: a_val,
+            AXIS_LABELS["B"]: b_val,
+            AXIS_LABELS["C"]: c_val,
+            AXIS_LABELS["D"]: d_val,
+            AXIS_LABELS["E"]: e_val,
             DATA_LABELS["DSC"]: desc.strip()
                 if desc.strip()
                 else "ユーザーが定義したカスタムペルソナです。",
@@ -274,10 +324,14 @@ if st.sidebar.button("🗑️ カスタムペルソナ全消去"):
 # ==========================================
 if st.session_state.custom_personas:
     df_custom = pd.DataFrame(st.session_state.custom_personas)
-    df_all = pd.concat([df_default, df_custom], ignore_index=True)
+    df_pre_all = pd.concat([df_default, df_custom], ignore_index=True)
 else:
-    df_all = df_default.copy()
+    df_pre_all = df_default.copy()
 
+# DEBUG print(df_pre_all.head())
+
+# グループID順にソート
+df_all = df_pre_all.sort_values(by=DATA_LABELS["GRP"])
 
 # ==========================================
 # 【新規追加】① グループ選択メニュー（1次フィルタリング）
@@ -285,22 +339,20 @@ else:
 st.sidebar.write("---")
 st.sidebar.header("📁 グループの絞り込み")
 
-available_groups = sorted(df_all[DATA_LABELS["GRP"]].unique().tolist())
+# IDをソートし、List化
+available_groups_id_list = sorted(df_all[DATA_LABELS["GRP"]].unique().tolist())
 
-initial_group_display = {
-    GROUPE_NAME[group_code]: is_display
-    for group_code, is_display in GROUPE_INITIAL_DISPLAY.items()
-}
-
+# グループリストを表示しながら、selected_groupsを作成
+initial_group_display = GROUPE_INITIAL_DISPLAY
 selected_groups = []
-for group_name in available_groups:
-    default_checked = initial_group_display.get(group_name, True)
+for group_id in available_groups_id_list:
+    default_checked = initial_group_display.get(group_id, True)
     if st.sidebar.checkbox(
-        f"{group_name}",
+        GROUPE_NAME[f"{group_id}"],
         value=default_checked,
-        key=f"group_filter_{group_name}",
+        key=f"group_filter_{group_id}",
     ):
-        selected_groups.append(group_name)
+        selected_groups.append(group_id)
 
 # 選択されたグループだけに絞り込む（1次抽出）
 df_group_filtered = (
@@ -308,10 +360,6 @@ df_group_filtered = (
     if selected_groups
     else df_all.iloc[0:0]
 )
-df_groupe_filtered = df_group_filtered
-
-#    available_groups = df_all[DATA_LABELS["GRP"]].unique().tolist()
-
 
 # ==========================================
 # 【修正】② 動的凡例チェックボックス（2次フィルタリング）
@@ -328,14 +376,18 @@ for idx, row in df_group_filtered.iterrows():
     # 選択されているグループのペルソナだけがここにチェックボックスとして並びます
     if st.sidebar.checkbox(
         # row[DATA_LABELS['NAM']], value=select_all, key=f"cb_{row[DATA_LABELS['NAM']]}_{idx}_{row[DATA_LABELS['GRP']]}"
-        row[DATA_LABELS['GRP']] + "-" + row[DATA_LABELS['NAM']], value=select_all, key=f"cb_{row[DATA_LABELS['NAM']]}_{idx}_{row[DATA_LABELS['GRP']]}"
+        #row[DATA_LABELS['GRP']] + "-" + row[DATA_LABELS['NAM']], value=select_all, key=f"cb_{row[DATA_LABELS['NAM']]}_{idx}_{row[DATA_LABELS['GRP']]}"
+        GROUPE_NAME[row[DATA_LABELS['GRP']]] + "-" + row[DATA_LABELS['NAM']], value=select_all, key=f"cb_{row[DATA_LABELS['GRP']]}_{idx}_{row[DATA_LABELS['GRP']]}"
     ):
         selected_names.append(row[DATA_LABELS['NAM']])
 
+# ==========================================
 # 最終的に3Dプロットに渡すデータ（最終抽出）
+# ==========================================
+
 df_pre_final = df_group_filtered[df_group_filtered[DATA_LABELS['NAM']].isin(selected_names)]
 
-# マーカーにXYZ,a属性に応じた色をする設定する
+# マーカーで使用するXYZ,a属性に応じた色を追加する
 df_final = df_pre_final.copy()  # コピーを作成
 if not df_final.empty:
     df_final["color"] = df_final.apply(
@@ -357,9 +409,10 @@ if not df_final.empty:
         ),
         axis=1
     )
-    
-    
-### print("DEBUG colors:", df_final["color"].tolist())
+
+
+#    df_final["groupe_label"] = df_final[DATA_LABELS["GRP"]]
+#print("DEBUG colors:", df_final["groupe_label"].tolist())
 
 
 ####################################################################################################################
@@ -479,7 +532,7 @@ with plot_col:
                 )
 
                 # ペルソナのプロット（ぶりつぶし色は属性を反映）
-                if df_draw_type != GROUPE_NAME[GRPUPE_LABELS["CST"]]:
+                if df_draw_type != GROUPE_NAME[GROUPE_IDS["CST"]]:
                     # shadow_color='lightgray'            # 規定ペルソナは背景円示の色を薄い灰色にしてデフォルトペルソナを目立たせない
                     shadow_shape = 'circle'
                 else:
@@ -585,15 +638,15 @@ with plot_col:
             # A. デフォルトペルソナ(グループが、カスタム以外)のプロット
             draw_3d_markers(fig, 
 #                           df_final[df_final[DATA_LABELS["GRP"]] != GROUPES["CST"]].replace(r"\n","<br>", regex=True).copy(),
-                            df_final[df_final[DATA_LABELS["GRP"]] != GROUPE_NAME[GRPUPE_LABELS["CST"]]].replace(r"\n","<br>", regex=True).copy(),
-                            GROUPE_NAME[GRPUPE_LABELS["DEF"]],
+                            df_final[df_final[DATA_LABELS["GRP"]] != GROUPE_IDS["CST"]].replace(r"\n","<br>", regex=True).copy(),
+                            GROUPE_NAME[GROUPE_IDS["DEF"]],
                             legend_displayed_flag)
 
             # B. カスタムペルソナ(グループが、カスタム)のプロット
 
             draw_3d_markers(fig, 
-                            df_final[df_final[DATA_LABELS["GRP"]] == GROUPE_NAME[GRPUPE_LABELS["CST"]]].replace(r"\n","<br>", regex=True).copy(),
-                            GROUPE_NAME[GRPUPE_LABELS["CST"]],
+                            df_final[df_final[DATA_LABELS["GRP"]] == GROUPE_IDS["CST"]].replace(r"\n","<br>", regex=True).copy(),
+                            GROUPE_NAME[GROUPE_IDS["CST"]],
                             legend_displayed_flag)
 
             legend_displayed_flag = True  # 凡例表示済みフラグを True に設定
@@ -777,7 +830,7 @@ st.divider()
 # ④ 下段　衝突判定アルゴリズム（相性診断）
 # ------------------------------------------
 
-st.subheader("💥 衝突判定＆相性診断 💕")
+st.subheader("💥 衝突推定 ＆ 相性推定 💕")
 
 if not st.session_state.custom_personas:
     st.info(
@@ -795,7 +848,9 @@ else:
 
     st.markdown(f"### 🎯 「{target_name}」の相性診断レポート")
     st.write(
-        f"**現在座標**: X: {target_data[AXIS_LABELS['X']]} / Y: {target_data[AXIS_LABELS['Y']]} / Z: {target_data[AXIS_LABELS['Z']]}"
+        f"**性格・思考傾向座標**: X:{target_data[AXIS_LABELS['X']]} / Y:{target_data[AXIS_LABELS['Y']]} / Z:{target_data[AXIS_LABELS['Z']]} "
+        f"**快楽志向座標**: α:{target_data[AXIS_LABELS['a']]} "
+        f"**相性診断用座標**: A:{target_data[AXIS_LABELS['A']]} / B:{target_data[AXIS_LABELS['B']]} / C:{target_data[AXIS_LABELS['C']]} / D:{target_data[AXIS_LABELS['D']]} / E:{target_data[AXIS_LABELS['E']]} "
     )
     # ToDo # st.caption(f"プロファイル情報: {target_data[DATA_LABELS["DSC"]]}")
 
@@ -809,11 +864,12 @@ else:
     st.write("#### 🔍 各ペルソナとの相性シミュレーション")
 
     # 選択されたペルソナと他の全ペルソナを比較
-    for idx, row in df_all.iterrows():
+#    for idx, row in df_all.iterrows():
+    for idx, row in df_final.iterrows():
         # 自分自身（同じ名前かつ同じタイプ）との比較はスキップ
-        if row[DATA_LABELS["NAM"]] == target_name and row[DATA_LABELS["GRP"]] == GROUPE_NAME[GRPUPE_LABELS["CST"]]:
+        if row[DATA_LABELS["NAM"]] == target_name and row[DATA_LABELS["GRP"]] == GROUPE_IDS["CST"]:
             continue
-
+        
         # 1. 3次元ユークリッド距離の計算
         dist = math.sqrt(
             (target_data[AXIS_LABELS["X"]] - row[AXIS_LABELS["X"]]) ** 2
@@ -831,17 +887,23 @@ else:
 
         if check_conflict(target_data[AXIS_LABELS["X"]], target_data[AXIS_LABELS["Y"]], target_data[AXIS_LABELS["Z"]]):
             alert_logs.append(
-                "⚠️ **【注意】** 強い個性の組み合わせ。一般的な社会（多数派前提の環境）や、多くの人との意見・利害の対立が予想される。"
+                "⚠️ **【注意】**\n\n"
+                " 強い個性の組み合わせ。"
+                "一般的な社会（多数派前提の環境）や、多くの人との意見・利害の対立が予想されます。\n\n"
             )
 
         # 距離基準の判定
         if dist < 2.0:
             alert_logs.append(
-                "🟢 **【思考OSの近接】** 思考アルゴリズムの親和性が非常に高い配置です。非言語的な相互理解が期待できる一方、課題や死角（短所）も共通化しやすいため、補完関係というよりは同質的な共鳴としてのバランスに留意が必要です。"
+                "🟢 **【思考傾向の近接】**\n\n"
+                "思考傾向の親和性が非常に高い（非常に近い）配置です。"
+                "非言語的な相互理解が期待できる一方、課題や死角（短所）も共通化しやすいため、補完関係というよりは同質的な共鳴としてのバランスに留意が必要です。\n\n"
             )
         elif dist >= 7.0:
             alert_logs.append(
-                "🌐 **【独立プロトコル】** 思考の前提となる基礎コード（3軸の距離）が大きく離れています。直感的な通信にはノイズが乗りやすいため、感情的な反発を排し、お互いの特性を切り分けた客観的なプロトコル（割り切ったルール設定）による接続が有効です。"
+                "🌐 **【価値観の乖離】**\n\n"
+                "思考の前提となる基礎データ（3軸の距離）が大きく離れています。"
+                "直感的な対話にはノイズが乗りやすいため、感情的な反発を排し、お互いの特性を切り分けた客観的な会話・連絡方法（割り切ったルール設定）による関係性維持が有効です。\n\n"
             )
 
         # 2. X軸反転（変革vs守護）の検出
@@ -849,7 +911,9 @@ else:
             target_data[AXIS_LABELS["X"]] <= -4.0 and row[AXIS_LABELS["X"]] >= 4.0
         ):
             alert_logs.append(
-                "⚔️ **【X軸：システム運用の非対称性】** 既存システムの改変・再構築を志向するエネルギーと、伝統・秩序の維持・安定を志向するエネルギーの乖離です。共同作業において、意思決定の手順やルールの扱いを巡る調整コストが高まりやすい関係性です。"
+                "⚔️ **【X軸：システム運用の非対称性】**\n\n"
+                "既存システムの改変・再構築を志向するエネルギーと、伝統・秩序の維持・安定を志向するエネルギーの乖離です。"
+                "共同作業では意思決定の手順やルールの扱いを巡る調整に手間取りやすい関係性です。\n\n"
             )
 
         # 3. Y軸反転（外部接続vs自己完結）の検出
@@ -857,7 +921,9 @@ else:
             target_data[AXIS_LABELS["Y"]] <= -4.0 and row[AXIS_LABELS["Y"]] >= 4.0
         ):
             alert_logs.append(
-                "📡 **【Y軸：通信プロトコルの不整合】** 外部との柔軟なパケット交換・協調を重視する側と、外部からの通信を制限して自己完結的に稼働する側の対比です。連絡の頻度や、関与の度合いに対する認識のズレ（過干渉または通信遮断）が生じやすい配置です。"
+                "📡 **【Y軸：対話傾向の不整合】**\n\n"
+                "外部との柔軟な意見交換・協調を重視する側と、外部からの通信を制限して自己完結的な考え方の側との組み合わせです。"
+                "連絡の頻度や、関与の度合いに対する認識のズレ（過干渉または通信遮断）が生じやすい配置です。\n\n"
             )
 
         # 4. Z軸反転（概念抽象vs生存実利）の検出
@@ -865,25 +931,97 @@ else:
             target_data[AXIS_LABELS["Z"]] <= -4.0 and row[AXIS_LABELS["Z"]] >= 4.0
         ):
             alert_logs.append(
-                "💎 **【Z軸：価値基準・立脚点の断絶】** 抽象的な理念・システム全体の美しさを優先する思考OSと、具体的な成果・物理的現実・経済合理性を優先する思考OSの衝突です。目的設定において根本的なすれ違いが発生しやすいため、互いの評価基準を明文化する必要があります。"
+                "💎 **【Z軸：価値基準・立脚点の断絶】**\n\n"
+                " 抽象的な理念・システム全体の美しさを優先する価値観と、具体的な成果・物理的現実・経済合理性を優先する価値観の衝突です。"
+                "目的設定において根本的なすれ違いが発生しやすいため、互いの評価基準を明文化する必要があります。\n\n"
             )
 
         # アコーディオンパネルで綺麗に出力
         # ToDo: グループのアイコン変更？
-        icon = "🦊" if row[DATA_LABELS["GRP"]] == GROUPE_NAME[GRPUPE_LABELS["CST"]] else "👤"
+        icon = "🦊" if row[DATA_LABELS["GRP"]] == GROUPE_NAME[GROUPE_IDS["CST"]] else "👤"
         with st.expander(f"{icon} {row[DATA_LABELS['NAM']]}（空間距離: {dist:.2f}）"):
             #
             st.write(
             #    f"**システム座標**: X:{row['X軸']} / Y:{row['Y軸']} / Z:{row['Z軸']} ({row['カテゴリ']})"
-                f"**システム座標**: X:{row[AXIS_LABELS['X']]} / Y:{row[AXIS_LABELS['Y']]} / Z:{row[AXIS_LABELS['Z']]} ({row[DATA_LABELS['CAT']]})"
+                f"**性格・思考傾向座標**: X:{row[AXIS_LABELS['X']]} / Y:{row[AXIS_LABELS['Y']]} / Z:{row[AXIS_LABELS['Z']]} "
+                f"**快楽志向座標**: α:{row[AXIS_LABELS['a']]} "
+                f"**相性診断用座標**: A:{row[AXIS_LABELS['A']]} / B:{row[AXIS_LABELS['B']]} / C:{row[AXIS_LABELS['C']]} / D:{row[AXIS_LABELS['D']]} / E:{row[AXIS_LABELS['E']]} "
+                f"({row[DATA_LABELS['CAT']]})"
             )
             st.markdown(f"*特性記述*: {row[DATA_LABELS['DSC']]}")
-            st.write("---")
 
+            st.write("---")
+            #----------------------
+            # レーダーチャートを表示
+            #----------------------
+
+            radar_categories = [
+                "A: " + AXIS_NAME[AXIS_LABELS["A"]],
+                "B: " + AXIS_NAME[AXIS_LABELS["B"]],
+                "C: " + AXIS_NAME[AXIS_LABELS["C"]],
+                "D: " + AXIS_NAME[AXIS_LABELS["D"]],
+                "E: " + AXIS_NAME[AXIS_LABELS["E"]],
+            ]
+            radar_values_target = [
+                target_data[AXIS_LABELS["A"]],
+                target_data[AXIS_LABELS["B"]],
+                target_data[AXIS_LABELS["C"]],
+                target_data[AXIS_LABELS["D"]],
+                target_data[AXIS_LABELS["E"]],
+            ]
+            radar_values_row = [
+                row[AXIS_LABELS["A"]],
+                row[AXIS_LABELS["B"]],
+                row[AXIS_LABELS["C"]],
+                row[AXIS_LABELS["D"]],
+                row[AXIS_LABELS["E"]],
+            ]
+
+            radar_fig = go.Figure()
+            radar_fig.add_trace(
+                go.Scatterpolar(
+                    r=radar_values_target + [radar_values_target[0]],
+                    theta=radar_categories + [radar_categories[0]],
+                    fill="toself",
+                    name=f"{target_name}",
+                    line=dict(color="rgba(31, 120, 180, 0.9)", width=2),
+                    fillcolor="rgba(31, 120, 180, 0.25)",
+                )
+            )
+            radar_fig.add_trace(
+                go.Scatterpolar(
+                    r=radar_values_row + [radar_values_row[0]],
+                    theta=radar_categories + [radar_categories[0]],
+                    fill="toself",
+                    name=f"{row[DATA_LABELS['NAM']]}",
+                    line=dict(color="rgba(227, 26, 28, 0.9)", width=2),
+                    fillcolor="rgba(227, 26, 28, 0.2)",
+                )
+            )
+            radar_fig.update_layout(
+                title="相性推定 レーダーチャート（A〜E軸）",
+                polar=dict(
+                    angularaxis=dict(direction="clockwise", rotation=90),
+                    radialaxis=dict(visible=True, range=[-5, 5]),
+                ),
+                showlegend=True,
+                margin=dict(l=40, r=40, t=60, b=40),
+            )
+            st.plotly_chart(radar_fig, use_container_width=True)
+
+
+            st.write("---")
+            #----------------------
+            # 推定結果表示
+            #----------------------
             if alert_logs:
                 for log in alert_logs:
-                    st.write(log)
+                    st.markdown(log)
             else:
-                st.write(
-                    "🔵 **【標準通信圏内】** 決定的な反転・乖離構造はなく、共通のプロトコルによる安定的かつ予測可能なコミュニケーションが維持しやすい関係性です。"
+
+                st.markdown(
+                    "🔵 **【標準通信圏内】**\n\n"
+                    "決定的な反転・乖離構造はなく、共通のプロトコルによる安定的かつ予測可能なコミュニケーションが維持しやすい関係性です。\n\n"
+                    "但し、あまりにも近すぎる性格同士の場合も不安定になることが判っています。\n\n"
+                    "（**ToDo:** 基準を別途確認後、判定方法変更）"
                 )

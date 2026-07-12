@@ -1,7 +1,7 @@
 # 3D性格分析ツール用定数データファイル
 
 
-DEFALUT_DATA_VERSION = "0.08"
+DEFALUT_DATA_VERSION = "0.10"
 
 # データ範囲、デフォルトペルソナ・データベースの定義
 
@@ -17,38 +17,42 @@ DATA_LABELS = {
 }
 
 
-GRPUPE_LABELS = {
-# 注「"nnn" : "nnnn"」のコロン前後のスペースは削除しないこと！　（GRPUPE_LABELSの置換処理対応のため。） 
-    "ANM" : "ANM",
-    "HUM" : "HUM",
-    "AI" : "AI",
-    "GEN" : "GEN",
-    "CAL" : "CAL",
-    "LIF" : "LIF",
-    "DEF" : "DEF",    # カスタム以外のグループをまとめるための仮のグループ名
-    "CST" : "CST"
+# データ定義でのグループ識別用。並べ方をソートできるように、グループ名とは独立したラベルを昇順で定義
+GROUPE_IDS = {
+# 注「"nnn" : "nnnn"」のコロン前後のスペースは削除しないこと！　（GROUPE_IDSの置換処理対応のため。） 
+    "ORG" : "G00",
+    "ANM" : "G10",
+    "HUM" : "G20",
+    "GEN" : "G30",
+    "CAL" : "G40",
+    "LIF" : "G50",
+    "AI"  : "G90",
+    "DEF" : "G98",    # カスタム以外のグループをまとめるための仮のグループ名
+    "CST" : "G99"
 }
 
 GROUPE_NAME = {
-    GRPUPE_LABELS["ANM"]: "動物",
-    GRPUPE_LABELS["HUM"]: "人物",
-    GRPUPE_LABELS["AI"]: "AI",
-    GRPUPE_LABELS["GEN"]: "時代",
-    GRPUPE_LABELS["CAL"]: "文化圏",
-    GRPUPE_LABELS["LIF"]: "生活志向",
-    GRPUPE_LABELS["DEF"]: "既定値",    # カスタム以外のグループをまとめるための仮のグループ名
-    GRPUPE_LABELS["CST"]: "カスタム"
+    GROUPE_IDS["ORG"]: "原点",
+    GROUPE_IDS["ANM"]: "動物",
+    GROUPE_IDS["HUM"]: "人物",
+    GROUPE_IDS["GEN"]: "時代",
+    GROUPE_IDS["CAL"]: "文化圏",
+    GROUPE_IDS["LIF"]: "生活志向",
+    GROUPE_IDS["AI"]: "AI",
+    GROUPE_IDS["DEF"]: "既定値",    # カスタム以外のグループをまとめるための仮のグループ名
+    GROUPE_IDS["CST"]: "カスタム"
 }
 
 GROUPE_INITIAL_DISPLAY = {
-    GRPUPE_LABELS["ANM"]: True,
-    GRPUPE_LABELS["HUM"]: True,
-    GRPUPE_LABELS["AI"]: True,
-    GRPUPE_LABELS["GEN"]: False,
-    GRPUPE_LABELS["CAL"]: False,
-    GRPUPE_LABELS["LIF"]: False,
-    GRPUPE_LABELS["DEF"]: True,    # カスタム以外のグループをまとめるための仮のグループ名
-    GRPUPE_LABELS["CST"]: True
+    GROUPE_IDS["ORG"]: True,
+    GROUPE_IDS["ANM"]: True,
+    GROUPE_IDS["HUM"]: True,
+    GROUPE_IDS["GEN"]: False,
+    GROUPE_IDS["CAL"]: False,
+    GROUPE_IDS["LIF"]: False,
+    GROUPE_IDS["AI"]: True,
+    GROUPE_IDS["DEF"]: True,    # カスタム以外のグループをまとめるための仮のグループ名
+    GROUPE_IDS["CST"]: True
 }
 
 
@@ -99,6 +103,7 @@ AXIS_DESC = {
 DEFAULT_PERSONAS = [
     #  記述書式  
     #    DATA_LABELS["GRP"]: 動物 、芸能人、政治家、経営者、研究者、AIなど  (既定値 / カスタム),          
+    #    DATA_LABELS["GRP"]: G00, G10,  (GROUPE_LABEL)          
     #    DATA_LABELS["NAM"]: 個別名称,            
     #    DATA_LABELS["CAT"]: 小区分,    
     #    ----------------------------------------------------------------------------------
@@ -115,29 +120,29 @@ DEFAULT_PERSONAS = [
     #    ----------------------------------------------------------------------------------
     #    DATA_LABELS["DSC"]:個性の概要説明",
     #
-    # --- 分析犠牲者（自分） ---
+    # --- 原点グループ ---
     {
-        DATA_LABELS["GRP"]: GROUPE_NAME[GRPUPE_LABELS["HUM"]],
-        DATA_LABELS["NAM"]: "蛮苦恣意",
-        DATA_LABELS["CAT"]: "嫌われ者・変人",
-        AXIS_LABELS["X"]: 1.0,
-        AXIS_LABELS["Y"]: -4.0, # 昔-5
-        AXIS_LABELS["Z"]: -3.0,
-        AXIS_LABELS["a"]: 3, 
-        AXIS_LABELS["A"]: -3,   # 仮  
-        AXIS_LABELS["B"]: -3,   # 仮  
-        AXIS_LABELS["C"]: -3,   # 仮   
-        AXIS_LABELS["D"]: -4,   # 仮  
-        AXIS_LABELS["E"]: -3,   # 昔-4
-        DATA_LABELS["DSC"]: ( 
-            "作家や芸術家になれず落書きで暇つぶししている、もとITエンジニア。\n"
-            "晴耕兼落書き、雨落書き。ジゾイド気質。AIができてから自己完結傾向がやや薄れ、AIにも依存"
-            ),
+        DATA_LABELS["GRP"]:  GROUPE_IDS["ORG"],
+        DATA_LABELS["NAM"]: "原点",
+        DATA_LABELS["CAT"]: "無味無臭無垢",
+        AXIS_LABELS["X"]: 0,
+        AXIS_LABELS["Y"]: 0,
+        AXIS_LABELS["Z"]: 0,
+        AXIS_LABELS["a"]: 0,
+        AXIS_LABELS["A"]: 0,
+        AXIS_LABELS["B"]: 0,
+        AXIS_LABELS["C"]: 0, 
+        AXIS_LABELS["D"]: 0,
+        AXIS_LABELS["E"]: 0,
+        DATA_LABELS["DSC"]: (
+            "性格形成の原点（新生児・幼少期イメージ）。\n"
+            "全軸0の状態。育ち方によってここから様々な方向に変化していく基準点として使用。\n"
+            "幼い頃との振り返り比較用。"
+            )
     },
-
     # --- 動物グループ ---
     {
-        DATA_LABELS["GRP"]:  GROUPE_NAME[GRPUPE_LABELS["ANM"]],
+        DATA_LABELS["GRP"]:  GROUPE_IDS["ANM"],
         DATA_LABELS["NAM"]: "女王蜂",
         DATA_LABELS["CAT"]: "統率型",
         AXIS_LABELS["X"]: -5.00, #　　　　　　　　　　　
@@ -157,7 +162,7 @@ DEFAULT_PERSONAS = [
     },
 
     {
-        DATA_LABELS["GRP"]:  GROUPE_NAME[GRPUPE_LABELS["ANM"]],
+        DATA_LABELS["GRP"]:  GROUPE_IDS["ANM"],
         DATA_LABELS["NAM"]: "ボス猿",
         DATA_LABELS["CAT"]: "統率型",
         AXIS_LABELS["X"]: -4.0,  #  3,  2,  5,  -2
@@ -178,7 +183,7 @@ DEFAULT_PERSONAS = [
     },
 
     {
-        DATA_LABELS["GRP"]:  GROUPE_NAME[GRPUPE_LABELS["ANM"]],
+        DATA_LABELS["GRP"]:  GROUPE_IDS["ANM"],
         DATA_LABELS["NAM"]: "一匹狼",
         DATA_LABELS["CAT"]: "孤高型",
         AXIS_LABELS["X"]: 5.0,   #  0,  1,  5   2
@@ -197,7 +202,7 @@ DEFAULT_PERSONAS = [
             )
     },
     {
-        DATA_LABELS["GRP"]:  GROUPE_NAME[GRPUPE_LABELS["ANM"]],
+        DATA_LABELS["GRP"]:  GROUPE_IDS["ANM"],
         DATA_LABELS["NAM"]: "飼いネコ",
         DATA_LABELS["CAT"]: "孤高型",
         AXIS_LABELS["X"]: 0.0,   # -2   1   3   0
@@ -215,7 +220,7 @@ DEFAULT_PERSONAS = [
             )
     },
     {
-        DATA_LABELS["GRP"]:  GROUPE_NAME[GRPUPE_LABELS["ANM"]],
+        DATA_LABELS["GRP"]:  GROUPE_IDS["ANM"],
         DATA_LABELS["NAM"]: "飼いイヌ",
         DATA_LABELS["CAT"]: "協調型",
         AXIS_LABELS["X"]: -3.00, #  3  -2  -4  -2
@@ -234,7 +239,7 @@ DEFAULT_PERSONAS = [
             )
     },
     {
-        DATA_LABELS["GRP"]:  GROUPE_NAME[GRPUPE_LABELS["ANM"]],
+        DATA_LABELS["GRP"]:  GROUPE_IDS["ANM"],
         DATA_LABELS["NAM"]: "羊",
         DATA_LABELS["CAT"]: "協調型",
         AXIS_LABELS["X"]: -3.00, #   , -3  -3  -3
@@ -252,7 +257,7 @@ DEFAULT_PERSONAS = [
         )
     },
     {
-        DATA_LABELS["GRP"]:  GROUPE_NAME[GRPUPE_LABELS["ANM"]],
+        DATA_LABELS["GRP"]:  GROUPE_IDS["ANM"],
         DATA_LABELS["NAM"]: "キツネ",
         DATA_LABELS["CAT"]: "知略型",
                         #        o   x   
@@ -272,7 +277,7 @@ DEFAULT_PERSONAS = [
         )
     },
     {
-        DATA_LABELS["GRP"]:  GROUPE_NAME[GRPUPE_LABELS["ANM"]],
+        DATA_LABELS["GRP"]:  GROUPE_IDS["ANM"],
         DATA_LABELS["NAM"]: "フクロウ",
         DATA_LABELS["CAT"]: "知略型",
         AXIS_LABELS["X"]: -1.00, #  1   -1   4   -1
@@ -292,7 +297,7 @@ DEFAULT_PERSONAS = [
             )
     },
     {
-        DATA_LABELS["GRP"]:  GROUPE_NAME[GRPUPE_LABELS["ANM"]],
+        DATA_LABELS["GRP"]:  GROUPE_IDS["ANM"],
         DATA_LABELS["NAM"]: "タヌキ",
         DATA_LABELS["CAT"]: "環境適応型", 
         AXIS_LABELS["X"]: -2.00, #  0  -1  -5  -2
@@ -311,7 +316,7 @@ DEFAULT_PERSONAS = [
         )
     },
     {
-        DATA_LABELS["GRP"]:  GROUPE_NAME[GRPUPE_LABELS["ANM"]],
+        DATA_LABELS["GRP"]:  GROUPE_IDS["ANM"],
         DATA_LABELS["NAM"]: "スズメ",
         DATA_LABELS["CAT"]: "環境適応型",
         AXIS_LABELS["X"]: 1.00, # -1  0  -2   1
@@ -334,7 +339,7 @@ DEFAULT_PERSONAS = [
 
 # --- AIグループ ---
     {
-        DATA_LABELS["GRP"]:  GROUPE_NAME[GRPUPE_LABELS["AI"]],
+        DATA_LABELS["GRP"]:  GROUPE_IDS["AI"],
         DATA_LABELS["NAM"]:"対話型AI",
         DATA_LABELS["CAT"]: "",
         AXIS_LABELS["X"]: 0,
@@ -351,7 +356,7 @@ DEFAULT_PERSONAS = [
         )
     },
     {
-        DATA_LABELS["GRP"]:  GROUPE_NAME[GRPUPE_LABELS["AI"]],
+        DATA_LABELS["GRP"]:  GROUPE_IDS["AI"],
         DATA_LABELS["NAM"]:"慎重型AI",
         DATA_LABELS["CAT"]: "",
         AXIS_LABELS["X"]: 2,
@@ -368,7 +373,7 @@ DEFAULT_PERSONAS = [
         )
     },
     {
-        DATA_LABELS["GRP"]:  GROUPE_NAME[GRPUPE_LABELS["AI"]],
+        DATA_LABELS["GRP"]:  GROUPE_IDS["AI"],
         DATA_LABELS["NAM"]:"実務支援AI",
         DATA_LABELS["CAT"]: "",
         AXIS_LABELS["X"]: 2,
@@ -385,7 +390,7 @@ DEFAULT_PERSONAS = [
         )
     },
     {
-        DATA_LABELS["GRP"]:  GROUPE_NAME[GRPUPE_LABELS["AI"]],
+        DATA_LABELS["GRP"]:  GROUPE_IDS["AI"],
         DATA_LABELS["NAM"]:"エンタメ志向AI",
         DATA_LABELS["CAT"]: "",
         AXIS_LABELS["X"]: 2,
@@ -402,7 +407,7 @@ DEFAULT_PERSONAS = [
         )
     },
     {
-        DATA_LABELS["GRP"]:  GROUPE_NAME[GRPUPE_LABELS["AI"]],
+        DATA_LABELS["GRP"]:  GROUPE_IDS["AI"],
         DATA_LABELS["NAM"]:"調査志向AI",
         DATA_LABELS["CAT"]: "",
         AXIS_LABELS["X"]: 1,
@@ -420,7 +425,7 @@ DEFAULT_PERSONAS = [
     },
 
     {
-        DATA_LABELS["GRP"]:  GROUPE_NAME[GRPUPE_LABELS["AI"]],
+        DATA_LABELS["GRP"]:  GROUPE_IDS["AI"],
         DATA_LABELS["NAM"]:"平均的な生成AI（2026年版）",
         DATA_LABELS["CAT"]: "",
         AXIS_LABELS["X"]:1,
@@ -440,7 +445,7 @@ DEFAULT_PERSONAS = [
 
 
     {
-        DATA_LABELS["GRP"]:  GROUPE_NAME[GRPUPE_LABELS["GEN"]],
+        DATA_LABELS["GRP"]:  GROUPE_IDS["GEN"],
         DATA_LABELS["NAM"]:"終戦直後（1945年）",
         DATA_LABELS["CAT"]:"日本",
         AXIS_LABELS["X"]:5,
@@ -457,7 +462,7 @@ DEFAULT_PERSONAS = [
     },
     
     {
-        DATA_LABELS["GRP"]:  GROUPE_NAME[GRPUPE_LABELS["GEN"]],
+        DATA_LABELS["GRP"]:  GROUPE_IDS["GEN"],
         DATA_LABELS["NAM"]:"高度経済成長（1960年頃）",
         DATA_LABELS["CAT"]:"日本",
         AXIS_LABELS["X"]:4,
@@ -474,7 +479,7 @@ DEFAULT_PERSONAS = [
     },
     
     {
-        DATA_LABELS["GRP"]:  GROUPE_NAME[GRPUPE_LABELS["GEN"]],
+        DATA_LABELS["GRP"]:  GROUPE_IDS["GEN"],
         DATA_LABELS["NAM"]:"学生運動・大阪万博（1970年頃）",
         DATA_LABELS["CAT"]:"日本",
         AXIS_LABELS["X"]:3,
@@ -492,7 +497,7 @@ DEFAULT_PERSONAS = [
 
 
     {
-        DATA_LABELS["GRP"]:  GROUPE_NAME[GRPUPE_LABELS["GEN"]],
+        DATA_LABELS["GRP"]:  GROUPE_IDS["GEN"],
         DATA_LABELS["NAM"]:"平均的な高校生（1970年頃）",
         DATA_LABELS["CAT"]:"日本",
         AXIS_LABELS["X"]:2,
@@ -508,7 +513,7 @@ DEFAULT_PERSONAS = [
         )
     },
     {
-        DATA_LABELS["GRP"]:  GROUPE_NAME[GRPUPE_LABELS["GEN"]],
+        DATA_LABELS["GRP"]:  GROUPE_IDS["GEN"],
         DATA_LABELS["NAM"]:"平均的な大学生（1970年頃）",
         DATA_LABELS["CAT"]:"日本",
         AXIS_LABELS["X"]:-1,
@@ -524,7 +529,7 @@ DEFAULT_PERSONAS = [
         )
     },
     {
-        DATA_LABELS["GRP"]:  GROUPE_NAME[GRPUPE_LABELS["GEN"]],
+        DATA_LABELS["GRP"]:  GROUPE_IDS["GEN"],
         DATA_LABELS["NAM"]:"平均的な社会人（1970年頃）",
         DATA_LABELS["CAT"]:"日本",
         AXIS_LABELS["X"]:3,
@@ -540,7 +545,7 @@ DEFAULT_PERSONAS = [
         )
     },
     {
-        DATA_LABELS["GRP"]:  GROUPE_NAME[GRPUPE_LABELS["GEN"]],
+        DATA_LABELS["GRP"]:  GROUPE_IDS["GEN"],
         DATA_LABELS["NAM"]:"平均的な高齢者（1970年頃）",
         DATA_LABELS["CAT"]:"日本",
         AXIS_LABELS["X"]:5,
@@ -559,7 +564,7 @@ DEFAULT_PERSONAS = [
     },
 
     {
-        DATA_LABELS["GRP"]:  GROUPE_NAME[GRPUPE_LABELS["GEN"]],
+        DATA_LABELS["GRP"]:  GROUPE_IDS["GEN"],
         DATA_LABELS["NAM"]:"バブル経済（1989年頃）",
         DATA_LABELS["CAT"]:"日本",
         AXIS_LABELS["X"]:2,
@@ -576,7 +581,7 @@ DEFAULT_PERSONAS = [
         )
     },
     {
-        DATA_LABELS["GRP"]:  GROUPE_NAME[GRPUPE_LABELS["GEN"]],
+        DATA_LABELS["GRP"]:  GROUPE_IDS["GEN"],
         DATA_LABELS["NAM"]:"失われた10年・Windows95（1995年頃）",
         DATA_LABELS["CAT"]:"日本",
         AXIS_LABELS["X"]:2,
@@ -594,7 +599,7 @@ DEFAULT_PERSONAS = [
     },
 
     {
-        DATA_LABELS["GRP"]:  GROUPE_NAME[GRPUPE_LABELS["GEN"]],
+        DATA_LABELS["GRP"]:  GROUPE_IDS["GEN"],
         DATA_LABELS["NAM"]:"IT革命・就職氷河期（2000年頃）",
         DATA_LABELS["CAT"]:"日本",
         AXIS_LABELS["X"]:1,
@@ -611,7 +616,7 @@ DEFAULT_PERSONAS = [
         )
     },
     {
-        DATA_LABELS["GRP"]:  GROUPE_NAME[GRPUPE_LABELS["GEN"]],
+        DATA_LABELS["GRP"]:  GROUPE_IDS["GEN"],
         DATA_LABELS["NAM"]:"東日本大震災（2011年頃）",
         DATA_LABELS["CAT"]:"日本",
         AXIS_LABELS["X"]:2,
@@ -628,7 +633,7 @@ DEFAULT_PERSONAS = [
         )
     },
     {
-        DATA_LABELS["GRP"]:  GROUPE_NAME[GRPUPE_LABELS["GEN"]],
+        DATA_LABELS["GRP"]:  GROUPE_IDS["GEN"],
         DATA_LABELS["NAM"]:"コロナ禍（2020年頃）",
         DATA_LABELS["CAT"]:"日本",
         AXIS_LABELS["X"]:1,
@@ -645,7 +650,7 @@ DEFAULT_PERSONAS = [
         )
     },
     {
-        DATA_LABELS["GRP"]:  GROUPE_NAME[GRPUPE_LABELS["GEN"]],
+        DATA_LABELS["GRP"]:  GROUPE_IDS["GEN"],
         DATA_LABELS["NAM"]:"生成AI時代（2025年頃）",
         DATA_LABELS["CAT"]:"日本",
         AXIS_LABELS["X"]:0,
@@ -663,7 +668,7 @@ DEFAULT_PERSONAS = [
     },
     
     {
-        DATA_LABELS["GRP"]:  GROUPE_NAME[GRPUPE_LABELS["GEN"]],
+        DATA_LABELS["GRP"]:  GROUPE_IDS["GEN"],
         DATA_LABELS["NAM"]:"平均的な会社員（2026年版）",
         DATA_LABELS["CAT"]:"日本",
         AXIS_LABELS["X"]:2,
@@ -680,7 +685,7 @@ DEFAULT_PERSONAS = [
         )
     },
     {
-        DATA_LABELS["GRP"]:  GROUPE_NAME[GRPUPE_LABELS["GEN"]],
+        DATA_LABELS["GRP"]:  GROUPE_IDS["GEN"],
         DATA_LABELS["NAM"]:"平均的な高校生（2026年版）",
         DATA_LABELS["CAT"]:"日本",
         AXIS_LABELS["X"]:-1,
@@ -697,7 +702,7 @@ DEFAULT_PERSONAS = [
         )
     },
     {
-        DATA_LABELS["GRP"]:  GROUPE_NAME[GRPUPE_LABELS["GEN"]],
+        DATA_LABELS["GRP"]:  GROUPE_IDS["GEN"],
         DATA_LABELS["NAM"]:"平均的な大学生（2026年版）",
         DATA_LABELS["CAT"]:"日本",
         AXIS_LABELS["X"]:-1,
@@ -714,7 +719,7 @@ DEFAULT_PERSONAS = [
         )
     },
     {
-        DATA_LABELS["GRP"]:  GROUPE_NAME[GRPUPE_LABELS["GEN"]],
+        DATA_LABELS["GRP"]:  GROUPE_IDS["GEN"],
         DATA_LABELS["NAM"]:"平均的な高齢者（2026年版）",
         DATA_LABELS["CAT"]:"日本",
         AXIS_LABELS["X"]:3,
@@ -732,7 +737,7 @@ DEFAULT_PERSONAS = [
     },
     
     {
-        DATA_LABELS["GRP"]:  GROUPE_NAME[GRPUPE_LABELS["CAL"]],
+        DATA_LABELS["GRP"]:  GROUPE_IDS["CAL"],
         DATA_LABELS["NAM"]:"日本社会（2026）",
         DATA_LABELS["CAT"]:"日本",
         AXIS_LABELS["X"]:1,
@@ -751,7 +756,7 @@ DEFAULT_PERSONAS = [
     
 
     {
-        DATA_LABELS["GRP"]:  GROUPE_NAME[GRPUPE_LABELS["CAL"]],
+        DATA_LABELS["GRP"]:  GROUPE_IDS["CAL"],
         DATA_LABELS["NAM"]:"アメリカ社会（2026）",
         DATA_LABELS["CAT"]:"米国",
         AXIS_LABELS["X"]:-2,
@@ -769,7 +774,7 @@ DEFAULT_PERSONAS = [
     },
     
     {
-        DATA_LABELS["GRP"]:  GROUPE_NAME[GRPUPE_LABELS["CAL"]],
+        DATA_LABELS["GRP"]:  GROUPE_IDS["CAL"],
         DATA_LABELS["NAM"]:"EU社会（2026）",
         DATA_LABELS["CAT"]:"EU",
         AXIS_LABELS["X"]:-3,
@@ -787,7 +792,7 @@ DEFAULT_PERSONAS = [
     },
 
     {
-        DATA_LABELS["GRP"]:  GROUPE_NAME[GRPUPE_LABELS["CAL"]],
+        DATA_LABELS["GRP"]:  GROUPE_IDS["CAL"],
         DATA_LABELS["NAM"]:"中国大陸社会（2026）",
         DATA_LABELS["CAT"]:"中国大陸",
         AXIS_LABELS["X"]:4,
@@ -805,7 +810,7 @@ DEFAULT_PERSONAS = [
     },
     
         {
-        DATA_LABELS["GRP"]:  GROUPE_NAME[GRPUPE_LABELS["LIF"]],
+        DATA_LABELS["GRP"]:  GROUPE_IDS["LIF"],
         DATA_LABELS["NAM"]:"社交的な酒好き(非酒乱)",
         DATA_LABELS["CAT"]:"",
         AXIS_LABELS["X"]:0,
@@ -823,7 +828,7 @@ DEFAULT_PERSONAS = [
     },
 
     {
-        DATA_LABELS["GRP"]:  GROUPE_NAME[GRPUPE_LABELS["LIF"]],
+        DATA_LABELS["GRP"]:  GROUPE_IDS["LIF"],
         DATA_LABELS["NAM"]:"ノンアルコール志向",
         DATA_LABELS["CAT"]:"",
         AXIS_LABELS["X"]:1,
@@ -841,7 +846,7 @@ DEFAULT_PERSONAS = [
     },
 
     {
-        DATA_LABELS["GRP"]:  GROUPE_NAME[GRPUPE_LABELS["LIF"]],
+        DATA_LABELS["GRP"]:  GROUPE_IDS["LIF"],
         DATA_LABELS["NAM"]:"健康志向（運動・筋トレ）",
         DATA_LABELS["CAT"]:"",
         AXIS_LABELS["X"]:1,
@@ -859,7 +864,7 @@ DEFAULT_PERSONAS = [
     },
 
     {
-        DATA_LABELS["GRP"]:  GROUPE_NAME[GRPUPE_LABELS["LIF"]],
+        DATA_LABELS["GRP"]:  GROUPE_IDS["LIF"],
         DATA_LABELS["NAM"]:"アウトドア派",
         DATA_LABELS["CAT"]:"",
         AXIS_LABELS["X"]:0,
@@ -877,7 +882,7 @@ DEFAULT_PERSONAS = [
     },
 
     {
-        DATA_LABELS["GRP"]:  GROUPE_NAME[GRPUPE_LABELS["LIF"]],
+        DATA_LABELS["GRP"]:  GROUPE_IDS["LIF"],
         DATA_LABELS["NAM"]:"園芸・自然派",
         DATA_LABELS["CAT"]:"",
         AXIS_LABELS["X"]:2,
@@ -895,7 +900,7 @@ DEFAULT_PERSONAS = [
     },
 
     {
-        DATA_LABELS["GRP"]:  GROUPE_NAME[GRPUPE_LABELS["LIF"]],
+        DATA_LABELS["GRP"]:  GROUPE_IDS["LIF"],
         DATA_LABELS["NAM"]:"読書・学習派",
         DATA_LABELS["CAT"]:"",
         AXIS_LABELS["X"]:0,
@@ -913,7 +918,7 @@ DEFAULT_PERSONAS = [
     },
 
     {
-        DATA_LABELS["GRP"]:  GROUPE_NAME[GRPUPE_LABELS["LIF"]],
+        DATA_LABELS["GRP"]:  GROUPE_IDS["LIF"],
         DATA_LABELS["NAM"]:"創作・アート派",
         DATA_LABELS["CAT"]:"",
         AXIS_LABELS["X"]:-2,
@@ -931,7 +936,7 @@ DEFAULT_PERSONAS = [
     },
 
     {
-        DATA_LABELS["GRP"]:  GROUPE_NAME[GRPUPE_LABELS["LIF"]],
+        DATA_LABELS["GRP"]:  GROUPE_IDS["LIF"],
         DATA_LABELS["NAM"]:"ゲーム・デジタル派",
         DATA_LABELS["CAT"]:"",
         AXIS_LABELS["X"]:-1,
@@ -949,7 +954,7 @@ DEFAULT_PERSONAS = [
     },
 
     {
-        DATA_LABELS["GRP"]:  GROUPE_NAME[GRPUPE_LABELS["LIF"]],
+        DATA_LABELS["GRP"]:  GROUPE_IDS["LIF"],
         DATA_LABELS["NAM"]:"旅行・冒険派",
         DATA_LABELS["CAT"]:"",
         AXIS_LABELS["X"]:-2,
@@ -967,7 +972,7 @@ DEFAULT_PERSONAS = [
     },
 
     {
-        DATA_LABELS["GRP"]:  GROUPE_NAME[GRPUPE_LABELS["LIF"]],
+        DATA_LABELS["GRP"]:  GROUPE_IDS["LIF"],
         DATA_LABELS["NAM"]:"瞑想・精神世界派",
         DATA_LABELS["CAT"]:"",
         AXIS_LABELS["X"]:-1,
@@ -985,7 +990,7 @@ DEFAULT_PERSONAS = [
     },
 
     {
-        DATA_LABELS["GRP"]:  GROUPE_NAME[GRPUPE_LABELS["LIF"]],
+        DATA_LABELS["GRP"]:  GROUPE_IDS["LIF"],
         DATA_LABELS["NAM"]:"家族中心派",
         DATA_LABELS["CAT"]:"",
         AXIS_LABELS["X"]:2,
@@ -1003,7 +1008,7 @@ DEFAULT_PERSONAS = [
     },
 
     {
-        DATA_LABELS["GRP"]:  GROUPE_NAME[GRPUPE_LABELS["LIF"]],
+        DATA_LABELS["GRP"]:  GROUPE_IDS["LIF"],
         DATA_LABELS["NAM"]:"仕事中心派",
         DATA_LABELS["CAT"]:"",
         AXIS_LABELS["X"]:2,
@@ -1021,7 +1026,7 @@ DEFAULT_PERSONAS = [
     },
 
     {
-        DATA_LABELS["GRP"]:  GROUPE_NAME[GRPUPE_LABELS["LIF"]],
+        DATA_LABELS["GRP"]:  GROUPE_IDS["LIF"],
         DATA_LABELS["NAM"]:"ミニマリスト",
         DATA_LABELS["CAT"]:"",
         AXIS_LABELS["X"]:0,
@@ -1040,7 +1045,7 @@ DEFAULT_PERSONAS = [
 
 
     {
-        DATA_LABELS["GRP"]:  GROUPE_NAME[GRPUPE_LABELS["HUM"]],
+        DATA_LABELS["GRP"]:  GROUPE_IDS["HUM"],
         DATA_LABELS["NAM"]:"孤高の天才専門医",
         DATA_LABELS["CAT"]:"",
         AXIS_LABELS["X"]:-2,
@@ -1057,24 +1062,24 @@ DEFAULT_PERSONAS = [
         )
     },
     {
-        DATA_LABELS["GRP"]:  GROUPE_NAME[GRPUPE_LABELS["HUM"]],
+        DATA_LABELS["GRP"]:  GROUPE_IDS["HUM"],
         DATA_LABELS["NAM"]:"食べ歩き営業マン",
         DATA_LABELS["CAT"]:"",
         AXIS_LABELS["X"]:0,
         AXIS_LABELS["Y"]:2,
         AXIS_LABELS["Z"]:-2,
-        AXIS_LABELS["a"]:-1,
+        AXIS_LABELS["a"]:-3,
         AXIS_LABELS["A"]:2,
         AXIS_LABELS["B"]:3,
         AXIS_LABELS["C"]:2,
         AXIS_LABELS["D"]:-2,
         AXIS_LABELS["E"]:0,
         DATA_LABELS["DSC"]: (
-            "現場を歩き、人との距離感を保ちながら自分のペースで行動する実務派。"
+            "現場を歩き、人との距離感を保ちながら自分のペースで行動する実務派。食べることが生きがい。"
         )
     },
     {
-        DATA_LABELS["GRP"]:  GROUPE_NAME[GRPUPE_LABELS["HUM"]],
+        DATA_LABELS["GRP"]:  GROUPE_IDS["HUM"],
         DATA_LABELS["NAM"]:"理想派グルメ評論家",
         DATA_LABELS["CAT"]:"",
         AXIS_LABELS["X"]:-1,
@@ -1087,12 +1092,12 @@ DEFAULT_PERSONAS = [
         AXIS_LABELS["D"]:1,
         AXIS_LABELS["E"]:-1,
         DATA_LABELS["DSC"]: (
-            "理想と哲学を重視し、本質を追求する評論家タイプ。料亭主催者。"
+            "理想と哲学を重視し、本質を追求する評論家タイプ。自分の満足できる味を求め料亭を主催。"
         )
     },
     {
-        DATA_LABELS["GRP"]:  GROUPE_NAME[GRPUPE_LABELS["HUM"]],
-        DATA_LABELS["NAM"]:"究極の美食家",
+        DATA_LABELS["GRP"]:  GROUPE_IDS["HUM"],
+        DATA_LABELS["NAM"]:"極限の食いしん坊",
         DATA_LABELS["CAT"]:"",
         AXIS_LABELS["X"]:3,
         AXIS_LABELS["Y"]:-2,
@@ -1104,11 +1109,11 @@ DEFAULT_PERSONAS = [
         AXIS_LABELS["D"]:3,
         AXIS_LABELS["E"]:-2,
         DATA_LABELS["DSC"]: (
-            "圧倒的な審美眼を持ち、自らの理想を妥協なく追求する芸術家肌。仕事はグータラ。"
+            "圧倒的な審美眼を持ち、自らの理想を妥協なく追求する芸術家肌。但し本業の仕事はグータラ。"
         )
     },
     {
-        DATA_LABELS["GRP"]:  GROUPE_NAME[GRPUPE_LABELS["HUM"]],
+        DATA_LABELS["GRP"]:  GROUPE_IDS["HUM"],
         DATA_LABELS["NAM"]:"放浪の人情家",
         DATA_LABELS["CAT"]:"",
         AXIS_LABELS["X"]:-2,
@@ -1125,7 +1130,7 @@ DEFAULT_PERSONAS = [
         )
     },
     {
-        DATA_LABELS["GRP"]:  GROUPE_NAME[GRPUPE_LABELS["HUM"]],
+        DATA_LABELS["GRP"]:  GROUPE_IDS["HUM"],
         DATA_LABELS["NAM"]:"組織内改革者",
         DATA_LABELS["CAT"]:"",
         AXIS_LABELS["X"]:2,
@@ -1142,7 +1147,7 @@ DEFAULT_PERSONAS = [
         )
     },
     {
-        DATA_LABELS["GRP"]:  GROUPE_NAME[GRPUPE_LABELS["HUM"]],
+        DATA_LABELS["GRP"]:  GROUPE_IDS["HUM"],
         DATA_LABELS["NAM"]:"正義感の強い船乗り",
         DATA_LABELS["CAT"]:"",
         AXIS_LABELS["X"]:1,
@@ -1159,7 +1164,7 @@ DEFAULT_PERSONAS = [
         )
     },
     {
-        DATA_LABELS["GRP"]:  GROUPE_NAME[GRPUPE_LABELS["HUM"]],
+        DATA_LABELS["GRP"]:  GROUPE_IDS["HUM"],
         DATA_LABELS["NAM"]:"自由を愛する放浪詩人",
         DATA_LABELS["CAT"]:"",
         AXIS_LABELS["X"]:-3,
@@ -1180,7 +1185,7 @@ DEFAULT_PERSONAS = [
 
     {
         # おしん
-        DATA_LABELS["GRP"]:  GROUPE_NAME[GRPUPE_LABELS["HUM"]],
+        DATA_LABELS["GRP"]:  GROUPE_IDS["HUM"],
         DATA_LABELS["NAM"]:"🌾逆境克服型努力家（若年期）",
         DATA_LABELS["CAT"]:"",
         AXIS_LABELS["X"]:3,
@@ -1198,7 +1203,7 @@ DEFAULT_PERSONAS = [
     },
     {
         # おしん
-        DATA_LABELS["GRP"]:  GROUPE_NAME[GRPUPE_LABELS["HUM"]],
+        DATA_LABELS["GRP"]:  GROUPE_IDS["HUM"],
         DATA_LABELS["NAM"]:"🌾共生型経営者（成熟期）",
         DATA_LABELS["CAT"]:"",
         AXIS_LABELS["X"]:3,
@@ -1217,7 +1222,7 @@ DEFAULT_PERSONAS = [
 
     {
         # ダメオヤジ
-        DATA_LABELS["GRP"]:  GROUPE_NAME[GRPUPE_LABELS["HUM"]],
+        DATA_LABELS["GRP"]:  GROUPE_IDS["HUM"],
         DATA_LABELS["NAM"]:"👔忍耐型家庭人（初期）",
         DATA_LABELS["CAT"]:"",
         AXIS_LABELS["X"]:-3,
@@ -1239,7 +1244,7 @@ DEFAULT_PERSONAS = [
 
     {
         # ダメオヤジ
-        DATA_LABELS["GRP"]:  GROUPE_NAME[GRPUPE_LABELS["HUM"]],
+        DATA_LABELS["GRP"]:  GROUPE_IDS["HUM"],
         DATA_LABELS["NAM"]:"👔成熟型家庭人（後期）",
         DATA_LABELS["CAT"]:"",
         AXIS_LABELS["X"]:0,
@@ -1260,7 +1265,7 @@ DEFAULT_PERSONAS = [
     },
     {
         # クリスマスキャロル
-        DATA_LABELS["GRP"]:  GROUPE_NAME[GRPUPE_LABELS["HUM"]],
+        DATA_LABELS["GRP"]:  GROUPE_IDS["HUM"],
         DATA_LABELS["NAM"]:"💰利益最優先経営者（クリスマス前）",
         DATA_LABELS["CAT"]:"",
         AXIS_LABELS["X"]:4,
@@ -1281,7 +1286,7 @@ DEFAULT_PERSONAS = [
 
     {
         # クリスマスキャロル
-        DATA_LABELS["GRP"]:  GROUPE_NAME[GRPUPE_LABELS["HUM"]],
+        DATA_LABELS["GRP"]:  GROUPE_IDS["HUM"],
         DATA_LABELS["NAM"]:"💰慈善・共生型経営者（クリスマス後）",
         DATA_LABELS["CAT"]:"",
         AXIS_LABELS["X"]:1,
@@ -1303,7 +1308,7 @@ DEFAULT_PERSONAS = [
 
     {
         # アイアンマン
-        DATA_LABELS["GRP"]:  GROUPE_NAME[GRPUPE_LABELS["HUM"]],
+        DATA_LABELS["GRP"]:  GROUPE_IDS["HUM"],
         DATA_LABELS["NAM"]:"⚙️孤高のイノベーター（初期）",
         DATA_LABELS["CAT"]:"",
         AXIS_LABELS["X"]:-2,
@@ -1325,7 +1330,7 @@ DEFAULT_PERSONAS = [
 
     {
         # アイアンマン
-        DATA_LABELS["GRP"]:  GROUPE_NAME[GRPUPE_LABELS["HUM"]],
+        DATA_LABELS["GRP"]:  GROUPE_IDS["HUM"],
         DATA_LABELS["NAM"]:"⚙️社会を支えるイノベータ（後期）",
         DATA_LABELS["CAT"]:"",
         AXIS_LABELS["X"]:0,
@@ -1343,7 +1348,27 @@ DEFAULT_PERSONAS = [
             "大切にしているもの:未来への責任\n"
             "苦手なもの:仲間を失うこと"
         )
-    }
+    },
+
+    # --- 分析犠牲者（自分） ---
+    {
+        DATA_LABELS["GRP"]: GROUPE_IDS["HUM"],
+        DATA_LABELS["NAM"]: "蛮苦恣意",
+        DATA_LABELS["CAT"]: "嫌われ者・変人",
+        AXIS_LABELS["X"]: 1.0,
+        AXIS_LABELS["Y"]: -4.0, # 昔-5
+        AXIS_LABELS["Z"]: -3.0,
+        AXIS_LABELS["a"]: 3, 
+        AXIS_LABELS["A"]: -3,   # 仮  
+        AXIS_LABELS["B"]: -3,   # 仮  
+        AXIS_LABELS["C"]: -3,   # 仮   
+        AXIS_LABELS["D"]: -4,   # 仮  
+        AXIS_LABELS["E"]: -3,   # 昔-4
+        DATA_LABELS["DSC"]: ( 
+            "作家や芸術家になれず落書きで暇つぶししている、もとITエンジニア。\n"
+            "晴耕兼落書き、雨落書き。ジゾイド気質。AIができてから自己完結傾向がやや薄れ、AIにも依存"
+            ),
+    },
 
 
 ]
