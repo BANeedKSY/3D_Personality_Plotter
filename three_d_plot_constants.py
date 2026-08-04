@@ -1,6 +1,6 @@
 # 3D性格分析ツール用定数データファイル
 
-DEFALUT_DATA_VERSION = "0.26"
+DEFALUT_DATA_VERSION = "0.26d"
 
 # ペルソナグループ定義
 

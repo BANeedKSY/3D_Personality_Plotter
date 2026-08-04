@@ -20,7 +20,7 @@ from three_d_plot_constants import (
 # 定数定義
 ##############################################################################################################################
 
-APP_VER = "0.26"  # アプリケーションバージョン
+APP_VER = "0.26d"  # アプリケーションバージョン
 # セッション管理用
 SESSION_DELETE_CUSTOM = "custom_personas"  ## 設定されていたら、デフォルト内データ内のサンプルカスタム削除
 
@@ -298,7 +298,7 @@ if "custom_personas" not in st.session_state:
 # ==========================================
 st.set_page_config(layout="wide", page_title="3D性格プロッター", page_icon="🌐")
 
-st.title("3D性格プロッター（思考傾向・相性推定システム） " + APP_VER + " / Data:" + DEFALUT_DATA_VERSION)
+st.title("3D性格プロッター（思考傾向・相性推定システム） Ver:" + APP_VER + " / Data:" + DEFALUT_DATA_VERSION)
 
 # ここでの言語指定は無意味。　StreamLit側が、<html lang="en">と書いている。
 ## JavaScriptで html lang を日本語に変更（ブラウザの翻訳提案を抑制）
