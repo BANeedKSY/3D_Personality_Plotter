@@ -20,7 +20,7 @@ from three_d_plot_constants import (
 # 定数定義
 ##############################################################################################################################
 
-APP_VER = "0.25"  # アプリケーションバージョン
+APP_VER = "0.26"  # アプリケーションバージョン
 # セッション管理用
 SESSION_DELETE_CUSTOM = "custom_personas"  ## 設定されていたら、デフォルト内データ内のサンプルカスタム削除
 
@@ -33,21 +33,38 @@ default_personas = DEFAULT_PERSONAS
 df_default = pd.DataFrame(default_personas)
 # df_default["タイプ"] = "デフォルト"
 
+# データ検索関数
+
+# 2. 条件に合う要素が含まれているか判定する関数
+def contains_name(data_list, key_name, target_name):
+    # any() は1つでも条件に合うものがあれば True を返します（見つかった時点で処理を打ち切るため効率的）
+    return any(item.get(key_name) == target_name for item in data_list)
+
 
 # 個性傾向判定関数
 def check_personality_note(threshold, num_x, num_y, num_z, num_alfa, num_a, num_b, num_c, num_d, num_e,):
     return_msg = ""
 
     # 原則として、人格評価は行わないこと。
+
+    # ===== 例外： ==================================
     #
-    #　例外：
+    # 特異な領域（局地コーナー領域）に位置する場合
     # Y軸（動機）とZ軸（立脚点）の歪みだけを検知する
     # Z:-5$（生存実利） * Y:+5$（外部操作） = 他者ハック・搾取セクター（我儘）
     # Z:+5$（極限の抽象） * Y:-5$（自己完結・遮断） = 原理主義セクター（妄信、自己陶酔）
     # X軸は判定から除外。(保守・革新とは関係ない。要注意傾向の人物は左右両方に存在する。)
+    # if (abs(row["Y軸"]) > 4.0 and abs(row["Z軸"]) > 4.0) or (abs(target_data["Y軸"]) > 4.0 and abs(target_data["Z軸"]) > 4.0):
+    #   alert_logs.append("⚠️ **【空間配置注意】** 固有の強い特性（動機と立脚点の組み合わせ）により、一般的な社会（多数派の環境）や、多くの人との間で意見・利害の競合が予想される座標領域です。お互いの立ち位置を慎重にキャリブレーション（調整）してください。")
+    if (num_y >= STEP_MAX and num_z <= STEP_MIN): 
+        return_msg += "【Y+Z-】⚠️固有の強い特性（動機と立脚点の組み合わせ）により、一般的な社会（多数派の環境）や、多くの人との間で意見・利害の競合が予想されます。\n\n"
+        
+    if (num_y <= STEP_MIN and num_z >= STEP_MAX): 
+        return_msg += "【Y-Z+】⚠️固有の強い特性（動機と立脚点の組み合わせ）により、一般的な社会（多数派の環境）や、多くの人との間で意見・利害の競合が予想されます。\n\n"
 
 
-
+    # ===== 一般評価 ==================================
+    #
     # ① 利用・支配型（相互利用リスク）
     #               Y＋（他人依存）    Z－（具体）
     # 起きやすいこと： 他人を問題解決手段として見やすい、人間関係が損得勘定になりやすい、短期利益を優先しやすい　－＞依存関係になりやすい
@@ -55,7 +72,7 @@ def check_personality_note(threshold, num_x, num_y, num_z, num_alfa, num_a, num_
     # 距離を置く理由： 利害が一致している間は良いが、一致しなくなると摩擦が急激に増える。
     # リスク補足：　　　家族思いな人もいれば、利用的な人もいる。他責、攻撃性、嘘　が加わるとリスク大
     if (num_y >= threshold and num_z <= -threshold):
-        return_msg += "【Y+Z-】依存関係になりやすく、短期利益優先の傾向があります。利害が一致している間は良いのですが、一致しなくなると摩擦が急激に増えることがあります。\n\n"
+        return_msg += "【Y+Z-】依存関係になりやすく、短期利益優先の傾向があります。利害が一致している間は良いのですが、一致しなくなると摩擦が急激に増えることがあります。"
         return_msg += "境界線を越えたり、責任転嫁が見られる場合、注意が必要です。\n\n"
 
 
@@ -65,7 +82,7 @@ def check_personality_note(threshold, num_x, num_y, num_z, num_alfa, num_a, num_
     # 距離を置く理由：理念が一致しない相手とは対立しやすい。
     # リスク補足：　　「一人で考える」だけなら、実害無し。他責、攻撃性、嘘　が加わるとリスク大
     if (num_x >= threshold and num_y <= -threshold and num_z >= threshold):
-        return_msg += "【X-Y+Z+】自身の信念を重視するあまり手段を正当化し、現実よりも理念を優先するあまり、カリスマ化、独善化、イデオロギー化と見做される恐れがあります。\n\n"
+        return_msg += "【X-Y+Z+】自身の信念を重視するあまり手段を正当化し、現実よりも理念を優先するあまり、カリスマ化、独善化、イデオロギー化と見做される恐れがあります。"
         return_msg += "他責、攻撃性、が見られる場合、注意が必要です。\n\n"
 
     # ② 独善型
@@ -172,7 +189,7 @@ def check_personality_note(threshold, num_x, num_y, num_z, num_alfa, num_a, num_
     # Y＋ × A＋
     # 周囲に合わせる能力は高いが、自分の意思表示が弱くなりやすい。
     if (num_y >= threshold and num_a >= threshold):
-        return_msg += "【Y+α+】周囲に合わせる能力は高いが、自分の意思表示が弱くなりやすい傾向があります。\n\n"
+        return_msg += "【Y+A+】周囲に合わせる能力は高いが、自分の意思表示が弱くなりやすい傾向があります。\n\n"
 
     #--------------------------
     # 介護向け
@@ -351,7 +368,7 @@ st.sidebar.title("🛠️ 設定")
 # ② ユーザー定義枠（カスタム追加機能）
 with st.sidebar.expander("👤 カスタムペルソナ定義", expanded=False):
     name = st.text_input(
-        "ペルソナ名 / ターゲット名", placeholder="例：自分、上司A、企画X"
+        "ペルソナ名", placeholder="例：自分、上司A、企画X"
     )
 
     st.markdown("**" + AXIS_PREFIX + "X" + AXIS_SUFFIX + ":" + AXIS_NAME1_X + "**")
@@ -449,12 +466,14 @@ with st.sidebar.expander("👤 カスタムペルソナ定義", expanded=False):
         placeholder="ペルソナの性格や行動の特徴に関するメモ",
     )
 
-    submit_button = st.button(label="空間へプロット追加")
+    submit_button = st.button(label="ペルソナを追加")
 
 # フォーム送信時の処理
 if submit_button:
     if not name.strip():
         st.sidebar.error("⚠️ ペルソナ名を入力してください。")
+    elif contains_name(st.session_state.custom_personas, DATA_NAM, name):
+        st.sidebar.error("⚠️ ペルソナ名"+name+"は登録済です。")
     else:
         new_persona = {
             DATA_GRP: GRP_CST_INDEX,
@@ -573,7 +592,7 @@ if not df_final.empty:
         lambda row: generate_emotionality_color(
             STEP_MIN,
             STEP_MAX,
-            row[AXIS_LABEL1_A],
+             row[AXIS_LABEL1_A],
         ),
         axis=1
     )
@@ -1012,22 +1031,41 @@ else:
         p for p in st.session_state.custom_personas if p[DATA_NAM] == target_name
     )
 
+    target_data_1x = target_data[AXIS_LABEL1_X]
+    target_data_1y = target_data[AXIS_LABEL1_Y]
+    target_data_1z = target_data[AXIS_LABEL1_Z]
+    target_data_1a = target_data[AXIS_LABEL1_A]
+    target_data_2a = target_data[AXIS_LABEL2_A]
+    target_data_2b = target_data[AXIS_LABEL2_B]
+    target_data_2c = target_data[AXIS_LABEL2_C]
+    target_data_2d = target_data[AXIS_LABEL2_D]
+    target_data_2e = target_data[AXIS_LABEL2_E]
+
+
     st.markdown(f"### 🎯 「{target_name}」の性格推定")
+#    st.write(
+#        f"**性格・思考傾向座標**: X:{target_data_1x} / Y:{target_data_1y} / Z:{target_data_1z}   "
+#        f"**快楽志向座標**: α:{target_data_1a}   "
+#        f"**相性診断用座標**: A:{target_data_1a} / B:{target_data_1b]} / C:{target_data_2c} / D:{target_data_2d} / E:{target_data_2e} "
+#    )
+ 
     st.write(
-        f"**性格・思考傾向座標**: X:{target_data[AXIS_LABEL1_X]} / Y:{target_data[AXIS_LABEL1_Y]} / Z:{target_data[AXIS_LABEL1_Z]}   "
-        f"**快楽志向座標**: α:{target_data[AXIS_LABEL1_A]}   "
-        f"**相性診断用座標**: A:{target_data[AXIS_LABEL2_A]} / B:{target_data[AXIS_LABEL2_B]} / C:{target_data[AXIS_LABEL2_C]} / D:{target_data[AXIS_LABEL2_D]} / E:{target_data[AXIS_LABEL2_E]} "
+        f"**性格・思考傾向座標**: X:{target_data_1x} / Y:{target_data_1y} / Z:{target_data_1z}   "
+        f"**快楽志向座標**: α:{target_data_1a}   "
+        f"**相性診断用座標**: A:{target_data_2a} / B:{target_data_2b} / C:{target_data_2c} / D:{target_data_2d} / E:{target_data_2e} "
     )
-    # ToDo # st.caption(f"プロファイル情報: {target_data[DATA_DSC]}")
 
-    # ユーザー定義ペルソナの正確傾向判定
-    check_result = check_personality_note(
-                THRESHOLD, target_data[AXIS_LABEL1_X], target_data[AXIS_LABEL1_Y], target_data[AXIS_LABEL1_Z],target_data[AXIS_LABEL1_A], 
-                target_data[AXIS_LABEL2_A], target_data[AXIS_LABEL2_B], target_data[AXIS_LABEL2_C], target_data[AXIS_LABEL2_D], target_data[AXIS_LABEL2_E])
 
-    if (check_result != "") :
+
+    # ユーザー定義ペルソナ（基準側）の正確傾向判定
+    check_result_ref = check_personality_note(
+                THRESHOLD, target_data_1x, target_data_1y, target_data_1z, target_data_1a, 
+                target_data_2a, target_data_2b, target_data_2c, target_data_2d, target_data_2e)
+
+
+    if (check_result_ref != "") :
         st.warning(
-            "⚠️【注意】場合により他人と衝突する可能性がありえます。\n\n" + check_result
+            "⚠️【注意】場合により他人と衝突する可能性がありえます。\n\n" + check_result_ref
         )
     st.write("---")
 
@@ -1039,12 +1077,22 @@ else:
         if row[DATA_NAM] == target_name and row[DATA_GRP] == GRP_CST_INDEX:
             continue
         
-
+        
+        row_data_1x = row[AXIS_LABEL1_X]
+        row_data_1y = row[AXIS_LABEL1_Y]
+        row_data_1z = row[AXIS_LABEL1_Z]
+        row_data_1a = row[AXIS_LABEL1_A]
+        row_data_2a = row[AXIS_LABEL2_A]
+        row_data_2b = row[AXIS_LABEL2_B]
+        row_data_2c = row[AXIS_LABEL2_C]
+        row_data_2d = row[AXIS_LABEL2_D]
+        row_data_2e = row[AXIS_LABEL2_E]
+        
         # 1. 3次元ユークリッド距離の計算
         dist = math.sqrt(
-            (target_data[AXIS_LABEL1_X] - row[AXIS_LABEL1_X]) ** 2
-            + (target_data[AXIS_LABEL1_Y] - row[AXIS_LABEL1_Y]) ** 2
-            + (target_data[AXIS_LABEL1_Z] - row[AXIS_LABEL1_Z]) ** 2
+            (target_data_1x - row_data_1x) ** 2
+            + (target_data_1y - row_data_1y) ** 2
+            + (target_data_1z - row_data_1z) ** 2
         )
 
         # アコーディオンパネルで綺麗に出力
@@ -1053,12 +1101,12 @@ else:
         with st.expander(f"{icon} {row[DATA_NAM]}（空間距離: {dist:.2f}）"):
             st.write(
             #    f"**システム座標**: X:{row['X軸']} / Y:{row['Y軸']} / Z:{row['Z軸']} ({row['カテゴリ']})"
-                f"**性格・思考傾向座標**: X:{row[AXIS_LABEL1_X]} / Y:{row[AXIS_LABEL1_Y]} / Z:{row[AXIS_LABEL1_Z]} "
-                f"**快楽志向座標**: α:{row[AXIS_LABEL1_A]} "
-                f"**相性診断用座標**: A:{row[AXIS_LABEL2_A]} / B:{row[AXIS_LABEL2_B]} / C:{row[AXIS_LABEL2_C]} / D:{row[AXIS_LABEL2_D]} / E:{row[AXIS_LABEL2_E]} "
+                f"**性格・思考傾向座標**: X:{row_data_1x} / Y:{row_data_1y} / Z:{row_data_1z} "
+                f"**快楽志向座標**: α:{row_data_1a} "
+                f"**相性診断用座標**: A:{row_data_2a} / B:{row_data_2b} / C:{row_data_2c} / D:{row_data_2d} / E:{row_data_2e} "
                 f"({row[DATA_CAT]})"
             )
-            st.markdown(f"*特性記述*: {row[DATA_DSC]}")
+            st.markdown(f"**特性**: {row[DATA_DSC]}")
 
             st.write("---")
             
@@ -1080,16 +1128,16 @@ else:
                     "α: " + AXIS_NAME1_A,
                 ]
                 radar_values_target = [
-                    target_data[AXIS_LABEL1_X],
-                    target_data[AXIS_LABEL1_Y],
-                    target_data[AXIS_LABEL1_Z],
-                    target_data[AXIS_LABEL1_A],
+                    target_data_1x,
+                    target_data_1y,
+                    target_data_1z,
+                    target_data_1a,
                 ]
                 radar_values_row = [
-                    row[AXIS_LABEL1_X],
-                    row[AXIS_LABEL1_Y],
-                    row[AXIS_LABEL1_Z],
-                    row[AXIS_LABEL1_A],
+                    row_data_1x,
+                    row_data_1y,
+                    row_data_1z,
+                    row_data_1a,
                 ]
 
                 radar_fig = go.Figure()
@@ -1135,18 +1183,18 @@ else:
                     "E: " + AXIS_NAME2_E,
                 ]
                 radar_values_target = [
-                    target_data[AXIS_LABEL2_A],
-                    target_data[AXIS_LABEL2_B],
-                    target_data[AXIS_LABEL2_C],
-                    target_data[AXIS_LABEL2_D],
-                    target_data[AXIS_LABEL2_E],
+                    target_data_2a,
+                    target_data_2b,
+                    target_data_2c,
+                    target_data_2d,
+                    target_data_2e,
                 ]
                 radar_values_row = [
-                    row[AXIS_LABEL2_A],
-                    row[AXIS_LABEL2_B],
-                    row[AXIS_LABEL2_C],
-                    row[AXIS_LABEL2_D],
-                    row[AXIS_LABEL2_E],
+                    row_data_2a,
+                    row_data_2b,
+                    row_data_2c,
+                    row_data_2d,
+                    row_data_2e,
                 ]
 
                 radar_fig = go.Figure()
@@ -1187,15 +1235,14 @@ else:
             #----------------------
 
 
-            check_result = check_personality_note(
-                THRESHOLD, target_data[AXIS_LABEL1_X], target_data[AXIS_LABEL1_Y], target_data[AXIS_LABEL1_Z],target_data[AXIS_LABEL1_A], 
-                target_data[AXIS_LABEL2_A], target_data[AXIS_LABEL2_B], target_data[AXIS_LABEL2_C], target_data[AXIS_LABEL2_D], target_data[AXIS_LABEL2_E])
- 
+            check_result_row = check_personality_note(
+                THRESHOLD, row_data_1x, row_data_1y, row_data_1z, row_data_1a, 
+                row_data_2a, row_data_2b, row_data_2c, row_data_2d, row_data_2e)
             st.markdown(f"#### 🎯 「"+row[DATA_NAM]+"」の性格推定")
 
-            if (check_result != "") :
+            if (check_result_row != "") :
                 st.warning(
-                    check_result
+                    check_result_row
                 )
                 st.write("---")
             else:   
@@ -1227,31 +1274,34 @@ else:
 
             # 簡易相性推定
             #-----------------------------------------------------
-            # 複数極値の重複検知（多くの人との競合リスク）
+            # 複数極値の重複検知（競合リスク）
             #-----------------------------------------------------
 
             # 自身、または比較対象のいずれかが特異な領域（コーナー）に位置する場合
             #            if (abs(row["Y軸"]) > 4.0 and abs(row["Z軸"]) > 4.0) or (abs(target_data["Y軸"]) > 4.0 and abs(target_data["Z軸"]) > 4.0):
             #                alert_logs.append("⚠️ **【空間配置注意】** 固有の強い特性（動機と立脚点の組み合わせ）により、一般的な社会（多数派の環境）や、多くの人との間で意見・利害の競合が予想される座標領域です。お互いの立ち位置を慎重にキャリブレーション（調整）してください。")
+
+
+
             
             # 2. X軸反転（変革vs守護）の検出　（要注意）
-            if ((target_data[AXIS_LABEL1_X] >= STEP_MAX and row[AXIS_LABEL1_X] <= STEP_MIN) or 
-                (target_data[AXIS_LABEL1_X] <= STEP_MIN and row[AXIS_LABEL1_X] >= STEP_MAX)) :
-                alert_logs += "⚔️ **【X軸：システム運用の非対称性】**\n\n"
+            if ((target_data_1x >= STEP_MAX and row_data_1x <= STEP_MIN) or 
+                (target_data_1x <= STEP_MIN and row_data_1x >= STEP_MAX)) :
+                alert_logs += "【X軸】⚔️ **競合リスク：システム運用の非対称性**\n\n"
                 alert_logs += "既存システムの改変・再構築を志向するエネルギーと、伝統・秩序の維持・安定を志向するエネルギーの乖離です。"
                 alert_logs += "共同作業では意思決定の手順やルールの扱いを巡る調整に手間取りやすい関係性です。\n\n"
 
             # 3. Y軸反転（外部接続vs自己完結）の検出　（相性）
-            if ((target_data[AXIS_LABEL1_Y] >= STEP_MAX and row[AXIS_LABEL1_Y] <= STEP_MIN) or 
-                (target_data[AXIS_LABEL1_Y] <= STEP_MIN and row[AXIS_LABEL1_Y] >= STEP_MAX)) :
-                alert_logs += "⚔️ **【Y軸：対話傾向の不整合】**\n\n"
+            if ((target_data_1y >= STEP_MAX and row_data_1y <= STEP_MIN) or 
+                (target_data_1y <= STEP_MIN and row_data_1y >= STEP_MAX)) :
+                alert_logs += "【Y軸】⚔️ **競合リスク：対話傾向の不整合**\n\n"
                 alert_logs += "外部との柔軟な意見交換・協調を重視する側と、外部からの通信を制限して自己完結的な考え方の側との組み合わせです。"
                 alert_logs += "連絡の頻度や、関与の度合いに対する認識のズレ（過干渉または通信遮断）が生じやすい配置です。\n\n"
 
             # 4. Z軸反転（概念抽象vs生存実利）の検出　（相性）
-            if ((target_data[AXIS_LABEL1_Z] >= STEP_MAX and row[AXIS_LABEL1_Z] <= STEP_MIN) or 
-                (target_data[AXIS_LABEL1_Z] <= STEP_MIN and row[AXIS_LABEL1_Z] >= STEP_MAX)):
-                alert_logs += "⚔️ **【Z軸：価値基準・立脚点の断絶】**\n\n"
+            if ((target_data_1z >= STEP_MAX and row_data_1z <= STEP_MIN) or 
+                (target_data_1z <= STEP_MIN and row_data_1z >= STEP_MAX)):
+                alert_logs += "【Z軸】⚔️ **競合リスク：価値基準・立脚点の断絶**\n\n"
                 alert_logs += " 抽象的な理念・システム全体の美しさを優先する価値観と、具体的な成果・物理的現実・経済合理性を優先する価値観の衝突です。"
                 alert_logs += "目的設定において根本的なすれ違いが発生しやすいため、互いの評価基準を明文化する必要があります。\n\n"
 
@@ -1295,8 +1345,8 @@ else:
             # 介護者は「何度も同じ話をされる」「常に呼ばれる」「自分の時間がない」
 
 
-            if ((row[AXIS_LABEL1_Y] <= -Judge_lo and row[AXIS_LABEL2_C] <= Judge_lo and  target_data[AXIS_LABEL1_Y] >= Judge_hi and target_data[AXIS_LABEL2_E] <= Judge_lo) or
-                (target_data[AXIS_LABEL1_Y] <= -Judge_lo and target_data[AXIS_LABEL2_C] <= Judge_lo and  row[AXIS_LABEL1_Y] >= Judge_hi and row[AXIS_LABEL2_E] <= Judge_lo)):
+            if ((row_data_1y <= Judge_lo and row_data_2c <= Judge_lo and  target_data_1y >= Judge_hi and target_data_2e <= Judge_lo) or
+                (target_data_1y <= Judge_lo and target_data_2c <= Judge_lo and  row_data_1y >= Judge_hi and row_data_2e <= Judge_lo)):
                 alert_logs += "【Ȳ-C-・Y+E-】⚠️🧑‍🦽 **介護関係の場合**：一方的な依存関係です。介護者は「何度も同じ話をされる」「常に呼ばれる」「自分の時間がない」という状況に陥るかもしれません。\n\n"
                 
                 
@@ -1310,8 +1360,8 @@ else:
             # 自立 + 協調
             # 適度なら 非常に良い。
             elif (
-                (row[AXIS_LABEL1_Y] <= -Judge_lo and target_data[AXIS_LABEL1_Y] >= Judge_hi ) or
-                (target_data[AXIS_LABEL1_Y] <= -Judge_lo and row[AXIS_LABEL1_Y] >= Judge_hi )
+                (row_data_1y <= Judge_lo and target_data_1y >= Judge_hi ) or
+                (target_data_1y <= Judge_lo and row_data_1y >= Judge_hi )
                 ):
                 alert_logs += "【Y+↔️Y-】⚠️🧑‍🦽 **介護関係の場合**：一方的な依存関係です。介護者は「自分でできることはやってほしい。」のに「ずっと一緒にいて。」という状況に陥るかもしれません。\n\n"
                 synagy_logs += "【Y+↔️Y-】💎 自立+協調の関係です。適度なら 非常に良い組み合わせです。\n\n"
@@ -1325,8 +1375,8 @@ else:
             # 相談 ＋ 決断
             # 役割分担になります。
             elif (
-                (row[AXIS_LABEL2_C] <= -Judge_lo and target_data[AXIS_LABEL2_C] >= Judge_hi ) or
-                (target_data[AXIS_LABEL2_C] <= -Judge_lo and row[AXIS_LABEL2_C] >= Judge_hi )
+                (row_data_2c <= Judge_lo and target_data_2c >= Judge_hi ) or
+                (target_data_2c <= Judge_lo and row_data_2c >= Judge_hi )
                 ):
                 alert_logs += "【C+↔️C-】⚠️🧑‍🦽 **介護関係の場合**：一方的な依存関係です。一見問題ないようで、介護者は「全部決める役」という、疲労が溜まる状況に陥るかもしれません。\n\n"
                 synagy_logs += "【C+↔️C-】💎主体性+委任の関係です。適度なら相談＋決断の役割分担になります。\n\n"
@@ -1341,15 +1391,15 @@ else:
             # 長期と経験が融合します。
             
             elif (
-                (row[AXIS_LABEL2_E] <= -Judge_lo and target_data[AXIS_LABEL2_E] >= Judge_hi ) or
-                (target_data[AXIS_LABEL2_E] <= -Judge_lo and row[AXIS_LABEL2_E  ] >= Judge_hi )
+                (row_data_2e <= Judge_lo and target_data_2e >= Judge_hi ) or
+                (target_data_2e <= Judge_lo and row[AXIS_LABEL2_E  ] >= Judge_hi )
                 ):
                 alert_logs += "【E+↔️E-】⚠️🧑‍🦽 **介護関係の場合**：一方的な依存関係です。一見問題ないようで、介護者は「全部決める役」という、疲労が溜まる状況に陥るかもしれません。\n\n"
                 synagy_logs += "【E+↔️E-】💎未来重視＋過去重視関係です。適度なら長期と経験が融合する良い組み合わせです。\n\n"
 
             # 両方E-なら昔話で盛り上がります。
-            elif (row[AXIS_LABEL2_E] <= -Judge_lo and target_data[AXIS_LABEL2_E] <= Judge_lo ):
-                synagy_logs = "【E+↔️E-】💎🦽 **介護関係の場合**：昔話で盛り上がる、よい組み合わせの可能性があります。\n\n"
+            elif (row_data_2e <= Judge_lo and target_data_2e <= Judge_lo ):
+                synagy_logs = "【E-↔️E-】💎🦽 **介護関係の場合**：昔話で盛り上がる、よい組み合わせの可能性があります。\n\n"
 
 
             # ① X（革新⇔保守）
@@ -1363,8 +1413,8 @@ else:
             # 適度なら 暴走を止められる。
 
             if (
-                (row[AXIS_LABEL1_X] <= -Judge_lo and target_data[AXIS_LABEL1_X] >= Judge_hi ) or
-                (target_data[AXIS_LABEL1_X] <= -Judge_lo and row[AXIS_LABEL1_X] >= Judge_hi )
+                (row_data_1x <= Judge_lo and target_data_1x >= Judge_hi ) or
+                (target_data_1x <= Judge_lo and row_data_1x >= Judge_hi )
                 ):
                 alert_logs += "【X+↔️X-】⚠️🧑‍🦽 **介護関係の場合**：衝突リスクがあります。例えば、介護者「新しい介護用品を使おう。」、被介護者「昔からこれで十分。」というような状況です。\n\n"
 
@@ -1383,8 +1433,8 @@ else:
 
 
             if (
-                (row[AXIS_LABEL1_Z] <= -Judge_lo and target_data[AXIS_LABEL1_Z] >= Judge_hi ) or
-                (target_data[AXIS_LABEL1_Z] <= -Judge_lo and row[AXIS_LABEL1_Z] >= Judge_hi )
+                (row_data_1z <= Judge_lo and target_data_1z >= Judge_hi ) or
+                (target_data_1z <= Judge_lo and row_data_1z >= Judge_hi )
                 ):
                 alert_logs += "【Z+↔️Z-】⚠️🧑‍🦽 **介護関係の場合**：衝突リスクがあります。例えば、介護者「今日はリハビリのために歩きましょう。」、被介護者「寒い。」というような状況です。"
                 alert_logs += "介護者は 「目的」を説明していますが、被介護者は 「今」を見ています。ここですれ違います。\n\n"
@@ -1403,8 +1453,8 @@ else:
             # リスク管理になります。
 
             if (
-                (row[AXIS_LABEL2_A] <= -Judge_lo and target_data[AXIS_LABEL2_A] >= Judge_hi ) or
-                (target_data[AXIS_LABEL2_A] <= -Judge_lo and row[AXIS_LABEL2_A] >= Judge_hi )
+                (row_data_2a <= Judge_lo and target_data_1a >= Judge_hi ) or
+                (target_data_1a <= Judge_lo and row_data_2a >= Judge_hi )
                 ):
                 alert_logs += "【A+↔️A-】⚠️🧑‍🦽 **介護関係の場合**：衝突リスクがあります。例えば、介護者「床が汚れている。」、被介護者「そんなこと気にしなくていい。」という、衝突状況に陥るかもしれません。\n\n"
 
@@ -1415,8 +1465,8 @@ else:
             # 低い人 気になるもの(＋か？）
             # 節約 実用品 思い出 まだ使える
             if (
-                (row[AXIS_LABEL1_A] <= -Judge_lo and target_data[AXIS_LABEL1_A] >= Judge_hi ) or
-                (target_data[AXIS_LABEL1_A] <= -Judge_lo and row[AXIS_LABEL1_A] >= Judge_hi )
+                (row_data_1a <= Judge_lo and target_data_1a >= Judge_hi ) or
+                (target_data_1a <= Judge_lo and row_data_1a >= Judge_hi )
                 ):
                 alert_logs += "【α+↔️α-】⚠️🧑‍🦽 **介護関係の場合**：衝突リスクがあります。例えば、介護者「清潔 整理 品質 見た目」、被介護者「節約 実用品 思い出 まだ使える」という、衝突状況に陥るかもしれません。\n\n"
 
