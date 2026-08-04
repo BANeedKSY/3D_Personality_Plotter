@@ -519,7 +519,8 @@ df_all = df_pre_all.sort_values(by=DATA_GRP)
 # 【新規追加】① グループ選択メニュー（1次フィルタリング）
 # ==========================================
 st.sidebar.write("---")
-st.sidebar.header("📁 グループの絞り込み")
+st.sidebar.header("👤 既定ペルソナ")
+st.sidebar.markdown("## 📁 グループの絞り込み")
 
 # ID(DATA_GRP)をソートし、List化
 available_groups_id_list = sorted(df_all[DATA_GRP].unique().tolist())
@@ -549,7 +550,7 @@ df_group_filtered = (
 # 【修正】② 動的凡例チェックボックス（2次フィルタリング）
 # ==========================================
 st.sidebar.write("---")
-st.sidebar.header("👁️ 個別表示切り替え")
+st.sidebar.markdown("## 👁️ 個別表示切り替え")
 
 # 絞り込まれたグループの中での全選択 / 全解除
 select_all = st.sidebar.checkbox("すべてを表示", value=True)
