@@ -1,6 +1,6 @@
 # 3D性格分析ツール用定数データファイル
 
-DEFALUT_DATA_VERSION = "0.20B"
+DEFALUT_DATA_VERSION = "0.25"
 
 # ペルソナグループ定義
 
@@ -10,21 +10,27 @@ GRP_HUM_INDEX = "G02"
 GRP_GEN_INDEX = "G03"
 GRP_CAL_INDEX = "G04"
 GRP_LIF_INDEX = "G05"
-GRP_AI_INDEX = "G06"
+
+GRP_WRK_INDEX = "G06"
+GRP_ENV_INDEX = "G07"
+
+GRP_AI_INDEX = "G80"
 GRP_TST_INDEX = "G90"
 GRP_DEF_INDEX = "G98"
 GRP_CST_INDEX = "G99"
 
-GRP_NAME_ORG = "原点"
-GRP_NAME_ANM = "動物"
-GRP_NAME_HUM = "人物"
-GRP_NAME_GEN = "時代"
-GRP_NAME_CAL = "文化圏"
-GRP_NAME_LIF = "生活志向"
-GRP_NAME_AI = "AI"
-GRP_NAME_TST = "テスト"
-GRP_NAME_DEF = "既定値"  # カスタム以外のグループをまとめるための仮のグループ名
-GRP_NAME_CST = "カスタム"
+GRP_NAME_ORG = "🧭原点"
+GRP_NAME_ANM = "🐾動物"
+GRP_NAME_HUM = "👤人物"
+GRP_NAME_GEN = "⏳時代・年代"
+GRP_NAME_CAL = "🌏 文化圏"
+GRP_NAME_LIF = "🏠生活志向"
+GRP_NAME_WRK = "💼働き方"
+GRP_NAME_ENV = "🏢組織・環境"
+GRP_NAME_AI = "🤖生成AI"
+GRP_NAME_TST = "✍テスト"
+GRP_NAME_DEF = "🗃️既定値"  # カスタム以外のグループをまとめるための仮のグループ名
+GRP_NAME_CST = "🪛カスタム"
 
 GRP_NAMES = {
     GRP_ORG_INDEX : GRP_NAME_ORG,
@@ -33,6 +39,8 @@ GRP_NAMES = {
     GRP_GEN_INDEX : GRP_NAME_GEN,
     GRP_CAL_INDEX : GRP_NAME_CAL,
     GRP_LIF_INDEX : GRP_NAME_LIF,
+    GRP_WRK_INDEX : GRP_NAME_WRK,
+    GRP_ENV_INDEX : GRP_NAME_ENV,
     GRP_AI_INDEX : GRP_NAME_AI,
     GRP_TST_INDEX : GRP_NAME_TST,
     GRP_DEF_INDEX : GRP_NAME_DEF,
@@ -46,6 +54,8 @@ GRP_INIT_DISP = {
     GRP_GEN_INDEX : False,
     GRP_CAL_INDEX : False,
     GRP_LIF_INDEX : False,
+    GRP_WRK_INDEX : False,
+    GRP_ENV_INDEX : False,
     GRP_AI_INDEX : True,
     GRP_TST_INDEX : False,
     GRP_DEF_INDEX : True,
@@ -90,7 +100,8 @@ AXIS_PREFIX = ""
 AXIS_SUFFIX = "軸"
 
 STEP_MAX = 5
-STEP_MIN = -5
+STEP_MIN = -STEP_MAX
+THRESHOLD = 4
 
 DATA_GRP="グループ"
 DATA_NAM="名前"
@@ -116,7 +127,7 @@ DEFAULT_PERSONAS = [
     #    AXIS_LABEL1_X: 数値-5.0～5.0,   保守・秩序維持 ⇔ 革新・リベラル・新ルール作り
     #    AXIS_LABEL1_Y: 数値-5.0～5.0,   自己完結 ⇔ 対人依存
     #    AXIS_LABEL1_Z: 数値-5.0～5.0,   具体 ⇔ 抽象
-    #    AXIS_LABEL1_A: 数値-5.0～5.0,   審美的・情緒的（色気💕） ⇔ 感覚的(食い気🍖🍶）
+    #    AXIS_LABEL2_A: 数値-5.0～5.0,   審美的・情緒的（色気💕） ⇔ 感覚的(食い気🍖🍶）
     #    ----------------------------------------------------------------------------------
     #    AXIS_LABEL2_A: 数値-5.0～5.0,   暗黙の了解（不文律）に無頓着 ⇔ 暗黙の了解に敏感
     #    AXIS_LABEL2_B: 数値-5.0～5.0,   価値の絶対性、普遍性(事実）を重視 ⇔ 価値の相対性（価値観）を重視
@@ -126,7 +137,9 @@ DEFAULT_PERSONAS = [
     #    ----------------------------------------------------------------------------------
     #    DATA_DSC:  "個性の概要説明",
     #
+
     # --- 原点グループ ---
+
     {
         DATA_GRP: GRP_ORG_INDEX,
         DATA_NAM: "原点",
@@ -1376,6 +1389,306 @@ DEFAULT_PERSONAS = [
             "苦手なもの:仲間を失うこと"
         )
     },
+
+
+    # --- 働き方ペルソナ（） ---
+
+
+    {
+        DATA_GRP: GRP_WRK_INDEX,
+        DATA_NAM:"会社員・公務員・大企業",
+        DATA_CAT:"組織協働型",
+        AXIS_LABEL1_X:-1,
+        AXIS_LABEL1_Y:2,
+        AXIS_LABEL1_Z:-1,
+        AXIS_LABEL1_A:1,
+        AXIS_LABEL2_A:1,
+        AXIS_LABEL2_B:2,
+        AXIS_LABEL2_C:1,
+        AXIS_LABEL2_D:2,
+        AXIS_LABEL2_E:0,
+        DATA_DSC: (
+            "組織全体の成果を重視し、役割分担や協調を大切にする働き方。ルールや上下関係にも比較的適応しやすい。"
+            "大切にしているもの:協調・安定・信頼"
+        )
+    },
+    {
+        DATA_GRP: GRP_WRK_INDEX,
+        DATA_NAM:"フリーランス・士業・個人事業主",
+        DATA_CAT:"自営型",
+        AXIS_LABEL1_X:2,
+        AXIS_LABEL1_Y:-3,
+        AXIS_LABEL1_Z:0,
+        AXIS_LABEL1_A:1,
+        AXIS_LABEL2_A:0,
+        AXIS_LABEL2_B:-1,
+        AXIS_LABEL2_C:-2,
+        AXIS_LABEL2_D:-2,
+        AXIS_LABEL2_E:1,
+        DATA_DSC: (
+            "自ら判断し責任を負うことを重視する働き方。自由度が高い反面、自己管理能力が求められる。"
+            "大切にしているもの:自由・責任・信用"
+        )
+    },
+    {
+        DATA_GRP: GRP_WRK_INDEX,
+        DATA_NAM:"農業・漁業・林業・畜産",
+        DATA_CAT:"一次産業型",
+        AXIS_LABEL1_X:-2,
+        AXIS_LABEL1_Y:-1,
+        AXIS_LABEL1_Z:-2,
+        AXIS_LABEL1_A:3,
+        AXIS_LABEL2_A:-1,
+        AXIS_LABEL2_B:1,
+        AXIS_LABEL2_C:-1,
+        AXIS_LABEL2_D:-1,
+        AXIS_LABEL2_E:-2,
+        DATA_DSC: (
+            "自然や季節の変化に合わせ、長期的・継続的に取り組む働き方。経験の蓄積を重視する。"
+            "大切にしているもの:自然・継続・地域"
+        )
+    },
+    {
+        DATA_GRP: GRP_WRK_INDEX,
+        DATA_NAM:"木工・陶芸・大工・鍛冶",
+        DATA_CAT:"職人型",
+        AXIS_LABEL1_X:0,
+        AXIS_LABEL1_Y:-2,
+        AXIS_LABEL1_Z:-2,
+        AXIS_LABEL1_A:4,
+        AXIS_LABEL2_A:0,
+        AXIS_LABEL2_B:-2,
+        AXIS_LABEL2_C:-3,
+        AXIS_LABEL2_D:-2,
+        AXIS_LABEL2_E:-1,
+        DATA_DSC: (
+            "品質や技術を最優先し、一つひとつを丁寧に積み上げる働き方。",
+            "大切にしているもの:技術・品質・完成度"
+        )
+    },
+    {
+        DATA_GRP: GRP_WRK_INDEX,
+        DATA_NAM:"作家・画家・漫画家・作曲家",
+        DATA_CAT:"創作者型",
+        AXIS_LABEL1_X:4,
+        AXIS_LABEL1_Y:-3,
+        AXIS_LABEL1_Z:3,
+        AXIS_LABEL1_A:2,
+        AXIS_LABEL2_A:2,
+        AXIS_LABEL2_B:-3,
+        AXIS_LABEL2_C:-2,
+        AXIS_LABEL2_D:-3,
+        AXIS_LABEL2_E:2,
+        DATA_DSC: (
+            "独自の世界観や新しい表現を追求する働き方。既存の枠組みに縛られにくい。",
+            "大切にしているもの:創造性・表現・独自性"
+        )
+    },
+    {
+        DATA_GRP: GRP_WRK_INDEX,
+        DATA_NAM:"飲食店・パン屋・花屋・理美容",
+        DATA_CAT:"接客・地域密着型",
+        AXIS_LABEL1_X:-1,
+        AXIS_LABEL1_Y:3,
+        AXIS_LABEL1_Z:-1,
+        AXIS_LABEL1_A:2,
+        AXIS_LABEL2_A:2,
+        AXIS_LABEL2_B:2,
+        AXIS_LABEL2_C:2,
+        AXIS_LABEL2_D:0,
+        AXIS_LABEL2_E:-1,
+        DATA_DSC: (
+            "顧客や地域社会との信頼関係を重視し、長く付き合うことを大切にする働き方。",
+            "大切にしているもの:信頼・地域・継続"
+        )
+    },
+    {
+        DATA_GRP: GRP_WRK_INDEX,
+        DATA_NAM:"医師・弁護士・会計士・研究者",
+        DATA_CAT:"専門家型",
+        AXIS_LABEL1_X:1,
+        AXIS_LABEL1_Y:-2,
+        AXIS_LABEL1_Z:2,
+        AXIS_LABEL1_A:3,
+        AXIS_LABEL2_A:1,
+        AXIS_LABEL2_B:-1,
+        AXIS_LABEL2_C:-1,
+        AXIS_LABEL2_D:1,
+        AXIS_LABEL2_E:1,
+        DATA_DSC: (
+            "専門知識や論理性を重視し、高い品質と正確性を目指す働き方。",
+            "大切にしているもの:専門性・正確性・倫理"
+        )
+    },
+    {
+        DATA_GRP: GRP_WRK_INDEX,
+        DATA_NAM:"経営者・ベンチャー・投資家",
+        DATA_CAT:"起業家型",
+        AXIS_LABEL1_X:5,
+        AXIS_LABEL1_Y:-2,
+        AXIS_LABEL1_Z:1,
+        AXIS_LABEL1_A:0,
+        AXIS_LABEL2_A:-1,
+        AXIS_LABEL2_B:-2,
+        AXIS_LABEL2_C:-2,
+        AXIS_LABEL2_D:-2,
+        AXIS_LABEL2_E:4,
+        DATA_DSC: (
+            "変化を恐れず、新しい価値や市場を生み出そうとする働き方。",
+            "大切にしているもの:挑戦・成長・未来"
+        )
+    },
+
+
+
+
+    # --- 組織環境ペルソナ（） ---
+    {
+        DATA_GRP: GRP_ENV_INDEX,
+        DATA_NAM:"官公庁",
+        DATA_CAT:"官公庁",
+        AXIS_LABEL1_X:-4,
+        AXIS_LABEL1_Y:3,
+        AXIS_LABEL1_Z:-2,
+        AXIS_LABEL1_A:2,
+        AXIS_LABEL2_A:1,
+        AXIS_LABEL2_B:3,
+        AXIS_LABEL2_C:2,
+        AXIS_LABEL2_D:4,
+        AXIS_LABEL2_E:-2,
+        DATA_DSC: (
+            "公平性や制度を重視し、安定した運営を目指す組織環境。",
+            "大切にしているもの:公平・秩序・継続"
+        )
+    },
+    {
+        DATA_GRP: GRP_ENV_INDEX,
+        DATA_NAM:"大企業",
+        DATA_CAT:"大企業",
+        AXIS_LABEL1_X:-2,
+        AXIS_LABEL1_Y:3,
+        AXIS_LABEL1_Z:-1,
+        AXIS_LABEL1_A:2,
+        AXIS_LABEL2_A:1,
+        AXIS_LABEL2_B:2,
+        AXIS_LABEL2_C:1,
+        AXIS_LABEL2_D:3,
+        AXIS_LABEL2_E:0,
+        DATA_DSC: (
+            "組織的な役割分担と安定した運営を重視する環境。",
+            "大切にしているもの:安定・効率・組織力"
+        )
+    },
+    {
+        DATA_GRP: GRP_ENV_INDEX,
+        DATA_NAM:"中小企業",
+        DATA_CAT:"中小企業",
+        AXIS_LABEL1_X:1,
+        AXIS_LABEL1_Y:2,
+        AXIS_LABEL1_Z:-1,
+        AXIS_LABEL1_A:1,
+        AXIS_LABEL2_A:0,
+        AXIS_LABEL2_B:1,
+        AXIS_LABEL2_C:0,
+        AXIS_LABEL2_D:1,
+        AXIS_LABEL2_E:1,
+        DATA_DSC: (
+            "柔軟性と実務能力を重視し、状況に応じて役割が変化しやすい環境。",
+            "大切にしているもの:柔軟性・実行力・信頼"
+        )
+    },
+    {
+        DATA_GRP: GRP_ENV_INDEX,
+        DATA_NAM:"スタートアップ",
+        DATA_CAT:"スタートアップ",
+        AXIS_LABEL1_X:5,
+        AXIS_LABEL1_Y:-1,
+        AXIS_LABEL1_Z:2,
+        AXIS_LABEL1_A:-1,
+        AXIS_LABEL2_A:-1,
+        AXIS_LABEL2_B:-2,
+        AXIS_LABEL2_C:-2,
+        AXIS_LABEL2_D:-3,
+        AXIS_LABEL2_E:5,
+        DATA_DSC: (
+            "急速な変化と挑戦を重視し、新しい価値を生み出すことを目的とする環境。",
+            "大切にしているもの:革新・成長・挑戦"
+        )
+    },
+    {
+        DATA_GRP: GRP_ENV_INDEX,
+        DATA_NAM:"研究機関",
+        DATA_CAT:"研究機関",
+        AXIS_LABEL1_X:2,
+        AXIS_LABEL1_Y:-2,
+        AXIS_LABEL1_Z:4,
+        AXIS_LABEL1_A:3,
+        AXIS_LABEL2_A:1,
+        AXIS_LABEL2_B:-2,
+        AXIS_LABEL2_C:-2,
+        AXIS_LABEL2_D:0,
+        AXIS_LABEL2_E:2,
+        DATA_DSC: (
+            "知識の探究と論理性を重視し、長期的な成果を目指す環境。",
+            "大切にしているもの:真理・知識・探究"
+        )
+    },
+    {
+        DATA_GRP: GRP_ENV_INDEX,
+        DATA_NAM:"地域コミュニティ",
+        DATA_CAT:"地域コミュニティ",
+        AXIS_LABEL1_X:-2,
+        AXIS_LABEL1_Y:4,
+        AXIS_LABEL1_Z:-2,
+        AXIS_LABEL1_A:2,
+        AXIS_LABEL2_A:2,
+        AXIS_LABEL2_B:3,
+        AXIS_LABEL2_C:2,
+        AXIS_LABEL2_D:1,
+        AXIS_LABEL2_E:-2,
+        DATA_DSC: (
+            "人と人とのつながりや相互扶助を重視する環境。",
+            "大切にしているもの:助け合い・安心・信頼"
+        )
+    },
+    {
+        DATA_GRP: GRP_ENV_INDEX,
+        DATA_NAM:"NPO・ボランティア",
+        DATA_CAT:"NPO・ボランティア",
+        AXIS_LABEL1_X:2,
+        AXIS_LABEL1_Y:3,
+        AXIS_LABEL1_Z:3,
+        AXIS_LABEL1_A:2,
+        AXIS_LABEL2_A:3,
+        AXIS_LABEL2_B:2,
+        AXIS_LABEL2_C:1,
+        AXIS_LABEL2_D:-1,
+        AXIS_LABEL2_E:2,
+        DATA_DSC: (
+            "社会課題の解決や理念の実現を目的とする組織環境。",
+            "大切にしているもの:社会貢献・共感・理念"
+        )
+    },
+    {
+        DATA_GRP: GRP_ENV_INDEX,
+        DATA_NAM:"オープンソースコミュニティ",
+        DATA_CAT:"オープンソースコミュニティ",
+        AXIS_LABEL1_X:4,
+        AXIS_LABEL1_Y:1,
+        AXIS_LABEL1_Z:3,
+        AXIS_LABEL1_A:1,
+        AXIS_LABEL2_A:0,
+        AXIS_LABEL2_B:-1,
+        AXIS_LABEL2_C:-2,
+        AXIS_LABEL2_D:-4,
+        AXIS_LABEL2_E:3,
+        DATA_DSC: (
+            "自主性と技術共有を重視し、上下関係よりも貢献を評価する環境。",
+            "大切にしているもの:共有・自由・技術"
+        )
+    },
+
+
 
     # --- テスト用分析対象者（自分など） ---
     {
