@@ -20,7 +20,9 @@ This tool was born from a deeply personal motivation: **the developer's own stru
 
 ## 🚀 How to Use
 
-The tool currently displays in Japanese only, and the sample data is also based primarily on Japanese cases. For this reason, I recommend reading the Japanese instructions on the tool page.
+The tool currently displays in Japanese only, and the sample data is also based primarily on Japanese cases. For this reason, I recommend reading the Japanese instructions on the following page.
+
+https://baneedksy.github.io/3d-personality-plotter-top.html
 
 ---
 
