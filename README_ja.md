@@ -18,7 +18,8 @@
 
 ## 🚀 使い方
 
-各ツールページに記載していますので、そちらをご参照ください。
+下記に記載していますので、こちらをご参照ください。
+https://baneedksy.github.io/3d-personality-plotter-top.html
 
 ---
 
